@@ -1,10 +1,25 @@
-use std::{error::Error, result::Result};
+use std::{
+    error::Error,   //
+    result::Result, //
+};
 
-use axum::{Router, routing::get};
-use server::config::Config;
+use axum::Router;
 use sea_orm::Database;
-use migrations::{ MigratorTrait, Migrator };
 use tokio::net::TcpListener;
+use utoipa::openapi::OpenApi;
+use utoipa_axum::router::OpenApiRouter;
+use utoipa_axum::routes;
+use utoipa_scalar::{
+    Scalar,   //
+    Servable, //
+};
+
+use server::config::Config;
+use server::controllers::*;
+use migrations::{
+    Migrator,      //
+    MigratorTrait, //
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -16,7 +31,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     Migrator::fresh(&db).await?;
 
-    let app = Router::new().route("/", get(|| async { "Hello, World!" }));
+    let (app, api): (Router, OpenApi) = OpenApiRouter::new()
+        .routes(routes!(hello_world))
+        .split_for_parts();
+
+    let app = app.merge(Scalar::with_url("/scalar", api));
 
     let listener = TcpListener::bind(config.socket()).await?;
     axum::serve(listener, app).await?;
