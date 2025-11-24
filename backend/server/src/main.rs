@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
     dotenvy::dotenv().unwrap_or_default();
 
-    let config = Config::new();
+    let config: Config = Default::default();
     let db = Database::connect(config.db_connection_str()).await?;
 
     Migrator::fresh(&db).await?;
