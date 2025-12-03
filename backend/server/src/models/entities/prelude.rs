@@ -2,7 +2,10 @@
 
 pub use super :: alert :: Entity as Alert ;
 pub use super :: alert_rule :: Entity as AlertRule ;
+pub use super :: audit_log :: Entity as AuditLog ;
 pub use super :: device :: Entity as Device ;
 pub use super :: measurement :: Entity as Measurement ;
 pub use super :: reservoir :: Entity as Reservoir ;
+pub use super :: schema_migrations :: Entity as SchemaMigrations ;
+pub use super :: system_settings :: Entity as SystemSettings ;
 pub use super :: user :: Entity as User ;

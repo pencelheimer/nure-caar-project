@@ -2,9 +2,9 @@
 
 
 
-use sea_orm :: entity :: prelude :: * ;
+use sea_orm :: entity :: prelude :: * ; use super :: sea_orm_active_enums :: AlertConditionType ;
 
-# [derive (Clone , Debug , PartialEq , DeriveEntityModel)] # [sea_orm (table_name = "alert_rule")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub reservoir_id : i32 , pub condition_type : String , # [sea_orm (column_type = "Double")] pub threshold : f64 , pub is_active : Option < bool > , }
+# [derive (Clone , Debug , PartialEq , DeriveEntityModel)] # [sea_orm (table_name = "alert_rule")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub reservoir_id : i32 , pub condition_type : AlertConditionType , # [sea_orm (column_type = "Double")] pub threshold : f64 , pub is_active : Option < bool > , pub created_at : Option < DateTimeWithTimeZone > , pub updated_at : Option < DateTimeWithTimeZone > , }
 
 # [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (has_many = "super::alert::Entity")] Alert , # [sea_orm (belongs_to = "super::reservoir::Entity" , from = "Column::ReservoirId" , to = "super::reservoir::Column::Id" , on_update = "NoAction" , on_delete = "Cascade" ,)] Reservoir , }
 

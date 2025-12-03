@@ -6,10 +6,6 @@ use std::{
 use sea_orm::Database;
 use tokio::net::TcpListener;
 
-use migrations::{
-    Migrator,      //
-    MigratorTrait, //
-};
 use server::{
     config::Config, //
     controllers //
@@ -22,8 +18,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let config: Config = Default::default();
 
-    let db = Database::connect(config.db_connection_str()).await?;
-    Migrator::fresh(&db).await?;
+    let _db = Database::connect(config.db_connection_str()).await?;
 
     let router = controllers::api_router();
 

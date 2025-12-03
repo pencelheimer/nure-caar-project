@@ -2,9 +2,9 @@
 
 
 
-use sea_orm :: entity :: prelude :: * ;
+use sea_orm :: entity :: prelude :: * ; use super :: sea_orm_active_enums :: AlertStatus ;
 
-# [derive (Clone , Debug , PartialEq , DeriveEntityModel , Eq)] # [sea_orm (table_name = "alert")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub rule_id : i32 , pub triggered_at : DateTimeWithTimeZone , pub sent_to : String , pub status : String , }
+# [derive (Clone , Debug , PartialEq , DeriveEntityModel , Eq)] # [sea_orm (table_name = "alert")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub rule_id : i32 , pub triggered_at : DateTimeWithTimeZone , pub sent_to : String , pub status : AlertStatus , }
 
 # [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (belongs_to = "super::alert_rule::Entity" , from = "Column::RuleId" , to = "super::alert_rule::Column::Id" , on_update = "NoAction" , on_delete = "Cascade" ,)] AlertRule , }
 

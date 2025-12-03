@@ -2,11 +2,11 @@
 
 
 
-use sea_orm :: entity :: prelude :: * ;
+use sea_orm :: entity :: prelude :: * ; use super :: sea_orm_active_enums :: DeviceStatus ;
 
-# [derive (Clone , Debug , PartialEq , DeriveEntityModel , Eq)] # [sea_orm (table_name = "device")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub user_id : i32 , pub reservoir_id : Option < i32 > , pub name : String , # [sea_orm (unique)] pub api_key : String , pub status : Option < String > , pub last_seen : Option < DateTimeWithTimeZone > , }
+# [derive (Clone , Debug , PartialEq , DeriveEntityModel , Eq)] # [sea_orm (table_name = "device")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub user_id : i32 , pub reservoir_id : Option < i32 > , pub name : String , # [sea_orm (unique)] pub api_key : String , pub status : DeviceStatus , pub last_seen : Option < DateTimeWithTimeZone > , pub created_at : Option < DateTimeWithTimeZone > , pub updated_at : Option < DateTimeWithTimeZone > , }
 
-# [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (has_many = "super::measurement::Entity")] Measurement , # [sea_orm (belongs_to = "super::reservoir::Entity" , from = "Column::ReservoirId" , to = "super::reservoir::Column::Id" , on_update = "Cascade" , on_delete = "SetNull" ,)] Reservoir , # [sea_orm (belongs_to = "super::user::Entity" , from = "Column::UserId" , to = "super::user::Column::Id" , on_update = "NoAction" , on_delete = "Cascade" ,)] User , }
+# [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (has_many = "super::measurement::Entity")] Measurement , # [sea_orm (belongs_to = "super::reservoir::Entity" , from = "Column::ReservoirId" , to = "super::reservoir::Column::Id" , on_update = "NoAction" , on_delete = "SetNull" ,)] Reservoir , # [sea_orm (belongs_to = "super::user::Entity" , from = "Column::UserId" , to = "super::user::Column::Id" , on_update = "NoAction" , on_delete = "Cascade" ,)] User , }
 
 impl Related < super :: measurement :: Entity > for Entity { fn to () -> RelationDef { Relation :: Measurement . def () } }
 

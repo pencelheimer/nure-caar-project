@@ -4,7 +4,11 @@ pub mod prelude ;
 
 pub mod alert ;
 pub mod alert_rule ;
+pub mod audit_log ;
 pub mod device ;
 pub mod measurement ;
 pub mod reservoir ;
+pub mod schema_migrations ;
+pub mod system_settings ;
 pub mod user ;
+pub mod sea_orm_active_enums ;

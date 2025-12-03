@@ -4,9 +4,9 @@
 
 use sea_orm :: entity :: prelude :: * ;
 
-# [derive (Clone , Debug , PartialEq , DeriveEntityModel)] # [sea_orm (table_name = "reservoir")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub user_id : i32 , pub name : String , # [sea_orm (column_type = "Text" , nullable)] pub description : Option < String > , # [sea_orm (column_type = "Double")] pub capacity : f64 , pub location : Option < String > , }
+# [derive (Clone , Debug , PartialEq , DeriveEntityModel)] # [sea_orm (table_name = "reservoir")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , pub user_id : i32 , pub name : String , # [sea_orm (column_type = "Text" , nullable)] pub description : Option < String > , # [sea_orm (column_type = "Double")] pub capacity : f64 , pub location : Option < String > , pub created_at : Option < DateTimeWithTimeZone > , pub updated_at : Option < DateTimeWithTimeZone > , }
 
-# [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (has_many = "super::alert_rule::Entity")] AlertRule , # [sea_orm (has_many = "super::device::Entity")] Device , # [sea_orm (belongs_to = "super::user::Entity" , from = "Column::UserId" , to = "super::user::Column::Id" , on_update = "Cascade" , on_delete = "Cascade" ,)] User , }
+# [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (has_many = "super::alert_rule::Entity")] AlertRule , # [sea_orm (has_many = "super::device::Entity")] Device , # [sea_orm (belongs_to = "super::user::Entity" , from = "Column::UserId" , to = "super::user::Column::Id" , on_update = "NoAction" , on_delete = "Cascade" ,)] User , }
 
 impl Related < super :: alert_rule :: Entity > for Entity { fn to () -> RelationDef { Relation :: AlertRule . def () } }
 

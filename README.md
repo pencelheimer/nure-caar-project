@@ -4,7 +4,7 @@
 - PostgreSQL
 - Rust
     - Axum + Tower
-    - SQLX
+    - Sea-Orm
 
 ## IoT
 ## Frontend

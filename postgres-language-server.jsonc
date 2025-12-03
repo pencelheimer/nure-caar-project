@@ -1,0 +1,32 @@
+{
+  "$schema": "https://pg-language-server.com/0.17.2/schema.json",
+  "extends": [],
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignore": []
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "safety": {
+        "banDropColumn": "error",    // error, warn, info, hint, off
+        "banDropTable": "warn",
+        "addingRequiredField": "off"
+      }
+    }
+  },
+  "typecheck": {},
+  "plpgsqlCheck": {},
+  "db": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "connTimeoutSecs": 10
+  }
+}
