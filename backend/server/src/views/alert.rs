@@ -1,6 +1,6 @@
 use serde::{
     Deserialize, //
-    Serialize,   //
+    Serialize,
 };
 use utoipa::ToSchema;
 

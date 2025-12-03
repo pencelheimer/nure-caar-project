@@ -1,17 +1,17 @@
 use crate::views::reservoir::{
     CreateReservoirRequest, //
-    ReservoirResponse,      //
-    UpdateReservoirRequest, //
+    ReservoirResponse,
+    UpdateReservoirRequest,
 };
 use axum::{
-    Json,                   //
-    extract::Path,          //
-    http::StatusCode,       //
-    response::IntoResponse, //
+    Json, //
+    extract::Path,
+    http::StatusCode,
+    response::IntoResponse,
 };
 use utoipa_axum::{
     router::OpenApiRouter, //
-    routes,                //
+    routes,
 };
 
 pub fn register_routes() -> OpenApiRouter {

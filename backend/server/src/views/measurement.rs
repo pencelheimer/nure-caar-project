@@ -1,14 +1,14 @@
 use chrono::{
-    DateTime,    //
-    FixedOffset, //
+    DateTime, //
+    FixedOffset,
 };
 use serde::{
     Deserialize, //
-    Serialize,   //
+    Serialize,
 };
 use utoipa::{
     IntoParams, //
-    ToSchema,   //
+    ToSchema,
 };
 
 #[derive(Serialize, Deserialize, ToSchema)]

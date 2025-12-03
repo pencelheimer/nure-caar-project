@@ -1,5 +1,6 @@
+pub mod admin;
+pub mod alert;
 pub mod auth;
-pub mod reservoir;
 pub mod device;
 pub mod measurement;
-pub mod alert;
+pub mod reservoir;

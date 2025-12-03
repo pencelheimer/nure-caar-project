@@ -26,5 +26,5 @@ pub fn api_router() -> axum::Router {
         .merge(reservoir::register_routes())
         .split_for_parts();
 
-    router.merge(Scalar::with_url("/scalar", api))
+    router.merge(Scalar::with_url("/", api))
 }

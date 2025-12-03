@@ -1,6 +1,6 @@
 use std::{
-    error::Error,   //
-    result::Result, //
+    error::Error, //
+    result::Result,
 };
 
 use sea_orm::Database;
@@ -8,13 +8,25 @@ use tokio::net::TcpListener;
 
 use server::{
     config::Config, //
-    controllers //
+    controllers,
+};
+
+use tracing_subscriber::{
+    layer::SubscriberExt, //
+    util::SubscriberInitExt,
 };
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv().unwrap_or_default();
-    env_logger::init();
+
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| format!("{}=debug", env!("CARGO_CRATE_NAME")).into()),
+        )
+        .with(tracing_subscriber::fmt::layer())
+        .init();
 
     let config: Config = Default::default();
 

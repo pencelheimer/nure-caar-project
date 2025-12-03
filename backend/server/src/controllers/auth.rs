@@ -1,16 +1,16 @@
 use crate::views::auth::{
-    AuthResponse,    //
-    LoginRequest,    //
-    RegisterRequest, //
+    AuthResponse, //
+    LoginRequest,
+    RegisterRequest,
 };
 use axum::{
-    Json,                   //
-    http::StatusCode,       //
-    response::IntoResponse, //
+    Json, //
+    http::StatusCode,
+    response::IntoResponse,
 };
 use utoipa_axum::{
     router::OpenApiRouter, //
-    routes,                //
+    routes,
 };
 
 pub fn register_routes() -> OpenApiRouter {

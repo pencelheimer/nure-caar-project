@@ -1,17 +1,17 @@
 use crate::views::measurement::{
-    MeasurementHistoryQuery,  //
-    MeasurementResponse,      //
-    SubmitMeasurementRequest, //
+    MeasurementHistoryQuery, //
+    MeasurementResponse,
+    SubmitMeasurementRequest,
 };
 use axum::{
-    Json,                   //
-    extract::{Path, Query}, //
-    http::StatusCode,       //
-    response::IntoResponse, //
+    Json, //
+    extract::{Path, Query},
+    http::StatusCode,
+    response::IntoResponse,
 };
 use utoipa_axum::{
     router::OpenApiRouter, //
-    routes,                //
+    routes,
 };
 
 pub fn register_routes() -> OpenApiRouter {

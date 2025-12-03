@@ -1,10 +1,10 @@
 use chrono::{
-    DateTime,    //
-    FixedOffset, //
+    DateTime, //
+    FixedOffset,
 };
 use serde::{
     Deserialize, //
-    Serialize,   //
+    Serialize,
 };
 use utoipa::ToSchema;
 
