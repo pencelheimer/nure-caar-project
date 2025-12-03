@@ -71,3 +71,23 @@ impl FromRequestParts<AppState> for AuthUser {
         })
     }
 }
+
+pub struct AuthAdmin(pub AuthUser);
+
+impl FromRequestParts<AppState> for AuthAdmin {
+    type Rejection = AppError;
+
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &AppState,
+    ) -> Result<Self, Self::Rejection> {
+        let user = AuthUser::from_request_parts(parts, state).await?;
+
+        if user.role != UserRole::Admin {
+            return Err(AuthError::PermissionDenied.into());
+        }
+
+        Ok(AuthAdmin(user))
+    }
+}
+

@@ -12,12 +12,34 @@ use utoipa::{
     ToSchema,
 };
 
+use crate::models::entities::sea_orm_active_enums::UserRole as DbUserRole;
+
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum UserRole {
     Admin,
     User,
     Viewer,
+}
+
+impl From<DbUserRole> for UserRole {
+    fn from(val: DbUserRole) -> Self {
+        match val {
+            DbUserRole::Admin => Self::Admin,
+            DbUserRole::User => Self::User,
+            DbUserRole::Viewer => Self::Viewer,
+        }
+    }
+}
+
+impl From<UserRole> for DbUserRole {
+    fn from(val: UserRole) -> Self {
+        match val {
+            UserRole::Admin => DbUserRole::Admin,
+            UserRole::User => DbUserRole::User,
+            UserRole::Viewer => DbUserRole::Viewer,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -28,15 +50,14 @@ pub struct AdminUserDetailsResponse {
     pub last_name: Option<String>,
     pub role: UserRole,
     pub created_at: DateTime<FixedOffset>,
-    pub reservoirs_count: Option<i64>,
-    pub devices_count: Option<i64>,
+    pub reservoirs_count: u64,
+    pub devices_count: u64,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
-pub struct UpdateUserRoleRequest {
+pub struct UpdateRoleParams {
     pub role: UserRole,
 }
-
 
 #[derive(Deserialize, IntoParams)]
 pub struct LogQuery {
@@ -49,7 +70,7 @@ pub struct LogQuery {
 
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct LogEntryResponse {
-    pub id: i32,
+    pub id: String,
     pub table_name: String,
     pub record_id: String,
     pub operation: String,
@@ -65,8 +86,8 @@ pub struct LogEntryResponse {
 
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct SystemStatsResponse {
-    pub total_users: i64,
-    pub total_reservoirs: i64,
-    pub total_devices: i64,
-    pub alert_rules_active: i64,
+    pub total_users: u64,
+    pub total_reservoirs: u64,
+    pub total_devices: u64,
+    pub alert_rules_active: u64,
 }
