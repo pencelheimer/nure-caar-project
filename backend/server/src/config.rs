@@ -7,6 +7,8 @@ pub struct Config {
     pub db_password: String,
     pub db_host: String,
     pub db_name: String,
+
+    pub jwt_secret: String,
 }
 
 impl Config {
@@ -19,6 +21,8 @@ impl Config {
         let db_host = dotenvy::var("DB_HOST").expect("DB_HOST env var is not present");
         let db_name = dotenvy::var("DB_NAME").expect("DB_NAME env var is not present");
 
+        let jwt_secret = dotenvy::var("JWT_SECRET").expect("JWT_SECRET env var is not present");
+
         Config {
             app_host: host,
             app_port: port,
@@ -26,6 +30,7 @@ impl Config {
             db_password,
             db_host,
             db_name,
+            jwt_secret,
         }
     }
 
