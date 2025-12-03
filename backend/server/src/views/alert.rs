@@ -1,18 +1,28 @@
+use chrono::{
+    DateTime, //
+    FixedOffset,
+};
 use serde::{
     Deserialize, //
     Serialize,
 };
 use utoipa::ToSchema;
 
-#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum AlertConditionType {
-    Equals,
-    NotEquals,
     GreaterThan,
     LessThan,
-    GreaterThanOrEqual,
-    LessThanOrEqual,
+    Equals,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum AlertStatus {
+    Pending,
+    Sent,
+    Failed,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -31,4 +41,13 @@ pub struct AlertRuleResponse {
     pub condition_type: AlertConditionType,
     pub threshold: f64,
     pub is_active: bool,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct AlertLogResponse {
+    pub id: i32,
+    pub rule_id: i32,
+    pub triggered_at: DateTime<FixedOffset>,
+    pub sent_to: String,
+    pub status: AlertStatus,
 }

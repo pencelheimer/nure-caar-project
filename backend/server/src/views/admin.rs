@@ -1,6 +1,16 @@
-use serde::{Deserialize, Serialize};
-use utoipa::{IntoParams, ToSchema};
-use chrono::{DateTime, FixedOffset};
+use chrono::{
+    DateTime, //
+    FixedOffset,
+};
+use serde::{
+    Deserialize, //
+    Serialize,
+};
+use serde_json::Value;
+use utoipa::{
+    IntoParams, //
+    ToSchema,
+};
 
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
@@ -18,8 +28,8 @@ pub struct AdminUserDetailsResponse {
     pub last_name: Option<String>,
     pub role: UserRole,
     pub created_at: DateTime<FixedOffset>,
-    pub reservoirs_count: i64,
-    pub devices_count: i64,
+    pub reservoirs_count: Option<i64>,
+    pub devices_count: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -27,42 +37,30 @@ pub struct UpdateUserRoleRequest {
     pub role: UserRole,
 }
 
-#[derive(Serialize, Deserialize, ToSchema)]
-pub struct BanUserRequest {
-    pub is_banned: bool,
-    pub ban_reason: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, ToSchema)]
-pub struct SystemConfigResponse {
-    pub maintenance_mode: bool,
-    pub registration_enabled: bool,
-    pub default_data_retention_days: i32,
-}
-
-#[derive(Serialize, Deserialize, ToSchema)]
-pub struct UpdateSystemConfigRequest {
-    pub maintenance_mode: Option<bool>,
-    pub registration_enabled: Option<bool>,
-    pub default_data_retention_days: Option<i32>,
-}
 
 #[derive(Deserialize, IntoParams)]
 pub struct LogQuery {
-    pub level: Option<String>,
-    pub user_id: Option<i32>,
-    pub limit: Option<usize>,
-    pub offset: Option<usize>,
+    pub table_name: Option<String>,
+    pub operation: Option<String>,
+    pub record_id: Option<String>,
+    pub limit: Option<u64>,
+    pub offset: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct LogEntryResponse {
-    pub id: String,
-    pub timestamp: DateTime<FixedOffset>,
-    pub level: String,
-    pub message: String,
-    pub user_email: Option<String>,
-    pub ip_address: Option<String>,
+    pub id: i32,
+    pub table_name: String,
+    pub record_id: String,
+    pub operation: String,
+
+    #[schema(value_type = Object)]
+    pub old_values: Option<Value>,
+
+    #[schema(value_type = Object)]
+    pub new_values: Option<Value>,
+
+    pub changed_at: DateTime<FixedOffset>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -70,6 +68,5 @@ pub struct SystemStatsResponse {
     pub total_users: i64,
     pub total_reservoirs: i64,
     pub total_devices: i64,
-    pub online_devices: i64,
-    pub alerts_today: i64,
+    pub alert_rules_active: i64,
 }

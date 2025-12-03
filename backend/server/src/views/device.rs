@@ -8,11 +8,18 @@ use serde::{
 };
 use utoipa::ToSchema;
 
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum DeviceStatus {
+    Online,
+    Offline,
+    Maintenance,
+}
+
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct CreateDeviceRequest {
     #[schema(example = "ESP32 Sensor 01")]
     pub name: String,
-    // reservoir_id is optional upon creation, can be assigned later
     pub reservoir_id: Option<i32>,
 }
 
@@ -20,7 +27,7 @@ pub struct CreateDeviceRequest {
 pub struct UpdateDeviceRequest {
     pub name: Option<String>,
     pub reservoir_id: Option<i32>,
-    pub status: Option<String>,
+    pub status: Option<DeviceStatus>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -28,9 +35,7 @@ pub struct DeviceResponse {
     pub id: i32,
     pub name: String,
     pub reservoir_id: Option<i32>,
-    pub status: Option<String>,
+    pub status: DeviceStatus,
     pub last_seen: Option<DateTime<FixedOffset>>,
-    // We usually don't return the full API key in a list response for security,
-    // but might return a masked version or just for the owner. TODO
     pub api_key_masked: String,
 }

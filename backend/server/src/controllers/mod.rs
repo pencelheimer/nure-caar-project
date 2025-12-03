@@ -1,3 +1,4 @@
+mod admin;
 mod auth;
 mod device;
 mod measurement;
@@ -6,8 +7,8 @@ mod reservoir;
 use utoipa::OpenApi;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_scalar::{
-    Scalar,   //
-    Servable, //
+    Scalar, //
+    Servable,
 };
 
 #[derive(OpenApi)]
@@ -20,6 +21,7 @@ struct ApiSpec;
 
 pub fn api_router() -> axum::Router {
     let (router, api) = OpenApiRouter::with_openapi(ApiSpec::openapi())
+        .merge(admin::register_routes())
         .merge(auth::register_routes())
         .merge(device::register_routes())
         .merge(measurement::register_routes())

@@ -1905,6 +1905,7 @@ dependencies = [
  "env_logger",
  "sea-orm",
  "serde",
+ "serde_json",
  "tokio",
  "tracing",
  "tracing-subscriber",
