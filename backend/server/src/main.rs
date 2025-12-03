@@ -1,24 +1,20 @@
-use std::{
-    error::Error, //
-    result::Result,
-};
-
-use sea_orm::Database;
-use tokio::net::TcpListener;
-
 use server::{
     config::Config, //
     controllers,
+    error::AppError,
     state::AppState,
 };
 
+use std::result::Result;
+use sea_orm::Database;
+use tokio::net::TcpListener;
 use tracing_subscriber::{
     layer::SubscriberExt, //
     util::SubscriberInitExt,
 };
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+async fn main() -> Result<(), AppError> {
     dotenvy::dotenv().unwrap_or_default();
 
     tracing_subscriber::registry()
