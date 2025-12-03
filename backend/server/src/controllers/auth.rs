@@ -1,7 +1,10 @@
-use crate::views::auth::{
-    AuthResponse, //
-    LoginRequest,
-    RegisterRequest,
+use crate::{
+    state::AppState, //
+    views::auth::{
+        AuthResponse, //
+        LoginRequest,
+        RegisterRequest,
+    },
 };
 use axum::{
     Json, //
@@ -13,7 +16,7 @@ use utoipa_axum::{
     routes,
 };
 
-pub fn register_routes() -> OpenApiRouter {
+pub fn register_routes() -> OpenApiRouter<AppState> {
     OpenApiRouter::new()
         .routes(routes!(register))
         .routes(routes!(login))

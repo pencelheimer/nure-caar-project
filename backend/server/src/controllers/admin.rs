@@ -1,4 +1,8 @@
-use crate::views::admin::*;
+use crate::{
+    state::AppState, //
+    views::admin::*,
+};
+
 use axum::{
     Json, //
     extract::{
@@ -83,7 +87,7 @@ pub async fn get_audit_logs(
     Ok(())
 }
 
-pub fn register_routes() -> OpenApiRouter {
+pub fn register_routes() -> OpenApiRouter<AppState> {
     OpenApiRouter::new()
         .routes(routes!(list_users))
         .routes(routes!(update_user_role))

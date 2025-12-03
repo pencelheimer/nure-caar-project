@@ -1,7 +1,10 @@
-use crate::views::device::{
-    CreateDeviceRequest, //
-    DeviceResponse,
-    UpdateDeviceRequest,
+use crate::{
+    state::AppState, //
+    views::device::{
+        CreateDeviceRequest, //
+        DeviceResponse,
+        UpdateDeviceRequest,
+    },
 };
 use axum::{
     Json, //
@@ -14,7 +17,7 @@ use utoipa_axum::{
     routes,
 };
 
-pub fn register_routes() -> OpenApiRouter {
+pub fn register_routes() -> OpenApiRouter<AppState> {
     OpenApiRouter::new()
         .routes(routes!(list_devices))
         .routes(routes!(create_device))

@@ -9,6 +9,7 @@ use tokio::net::TcpListener;
 use server::{
     config::Config, //
     controllers,
+    state::AppState,
 };
 
 use tracing_subscriber::{
@@ -29,10 +30,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .init();
 
     let config: Config = Default::default();
-
-    let _db = Database::connect(config.db_connection_str()).await?;
+    let db = Database::connect(config.db_connection_str()).await?;
+    let state = AppState {
+        db,
+        config: config.clone(),
+    };
 
     let router = controllers::api_router();
+    let router = router.with_state(state);
 
     let listener = TcpListener::bind(config.socket()).await?;
     axum::serve(listener, router).await?;

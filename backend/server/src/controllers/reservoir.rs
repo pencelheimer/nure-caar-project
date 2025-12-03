@@ -1,8 +1,8 @@
-use crate::views::reservoir::{
+use crate::{state::AppState, views::reservoir::{
     CreateReservoirRequest, //
     ReservoirResponse,
     UpdateReservoirRequest,
-};
+}};
 use axum::{
     Json, //
     extract::Path,
@@ -14,7 +14,7 @@ use utoipa_axum::{
     routes,
 };
 
-pub fn register_routes() -> OpenApiRouter {
+pub fn register_routes() -> OpenApiRouter::<AppState> {
     OpenApiRouter::new()
         .routes(routes!(list_reservoirs))
         .routes(routes!(create_reservoir))
