@@ -7,7 +7,7 @@ use error_set::error_set;
 use serde_json::json;
 
 error_set! {
-    AppError := AuthError || SystemError
+    AppError := AuthError || ResourceError || SystemError
 
     AuthError := {
         #[display("Invalid token")]
@@ -32,6 +32,17 @@ error_set! {
         PermissionDenied,
     }
 
+    ResourceError := {
+        #[display("Resource not found: {msg}")]
+        NotFound { msg: String },
+
+        #[display("Resource already exists: {msg}")]
+        AlreadyExists { msg: String },
+
+        #[display("Invalid data: {msg}")]
+        InvalidData { msg: String },
+    }
+
     SystemError := {
         #[display("Database error: {0}")]
         Database(sea_orm::DbErr),
@@ -42,11 +53,11 @@ error_set! {
         #[display("JWT error: {0}")]
         Jwt(jsonwebtoken::errors::Error),
 
-        #[display("Database error: {0}")]
+        #[display("Io error: {0}")]
         Io(std::io::Error),
 
-        #[display("Internal error: {message}")]
-        Any { message: String },
+        #[display("Internal error: {msg}")]
+        Any { msg: String },
     }
 }
 
@@ -68,9 +79,15 @@ impl IntoResponse for AppError {
             AppError::WrongCredentials => (StatusCode::UNAUTHORIZED, "WRONG_CREDENTIALS"),
             AppError::InvalidToken => (StatusCode::UNAUTHORIZED, "INVALID_TOKEN"),
 
-            AppError::Database(_) | AppError::Hash(_) | AppError::Jwt(_) | AppError::Io(_) | AppError::Any { .. } => {
-                (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR")
-            }
+            AppError::NotFound { .. } => (StatusCode::NOT_FOUND, "NOT_FOUND"),
+            AppError::AlreadyExists { .. } => (StatusCode::CONFLICT, "ALREADY_EXISTS"),
+            AppError::InvalidData { .. } => (StatusCode::BAD_REQUEST, "INVALID_DATA"),
+
+            AppError::Database(_)
+            | AppError::Hash(_)
+            | AppError::Jwt(_)
+            | AppError::Io(_)
+            | AppError::Any { .. } => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR"),
         };
 
         let message = if status == StatusCode::INTERNAL_SERVER_ERROR {
