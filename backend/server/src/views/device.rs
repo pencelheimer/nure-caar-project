@@ -1,3 +1,5 @@
+use crate::models::entities::sea_orm_active_enums::DeviceStatus as DbDeviceStatus;
+
 use chrono::{
     DateTime, //
     FixedOffset,
@@ -16,6 +18,26 @@ pub enum DeviceStatus {
     Maintenance,
 }
 
+impl From<DbDeviceStatus> for DeviceStatus {
+    fn from(val: DbDeviceStatus) -> Self {
+        match val {
+            DbDeviceStatus::Online => Self::Online,
+            DbDeviceStatus::Offline => Self::Offline,
+            DbDeviceStatus::Maintenance => Self::Maintenance,
+        }
+    }
+}
+
+impl From<DeviceStatus> for DbDeviceStatus {
+    fn from(val: DeviceStatus) -> Self {
+        match val {
+            DeviceStatus::Online => Self::Online,
+            DeviceStatus::Offline => Self::Offline,
+            DeviceStatus::Maintenance => Self::Maintenance,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct CreateDeviceRequest {
     #[schema(example = "ESP32 Sensor 01")]
@@ -26,7 +48,7 @@ pub struct CreateDeviceRequest {
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct UpdateDeviceRequest {
     pub name: Option<String>,
-    pub reservoir_id: Option<i32>,
+    pub reservoir_id: Option<Option<i32>>,
     pub status: Option<DeviceStatus>,
 }
 
@@ -37,5 +59,5 @@ pub struct DeviceResponse {
     pub reservoir_id: Option<i32>,
     pub status: DeviceStatus,
     pub last_seen: Option<DateTime<FixedOffset>>,
-    pub api_key_masked: String,
+    pub api_key: String,
 }
