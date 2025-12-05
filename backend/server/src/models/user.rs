@@ -10,6 +10,7 @@ use crate::{
         sea_orm_active_enums::UserRole,
         user,
     },
+    views::auth::UpdateProfileRequest,
 };
 
 use sea_orm::{prelude::*, *};
@@ -137,5 +138,50 @@ impl Users {
 
     pub async fn count(db: &DatabaseConnection) -> Result<u64, AppError> {
         Ok(User::find().count(db).await?)
+    }
+
+    pub async fn update_profile(
+        db: &DatabaseConnection,
+        user_id: i32,
+        data: UpdateProfileRequest,
+    ) -> Result<user::Model, AppError> {
+        let user = User::find_by_id(user_id)
+            .one(db)
+            .await?
+            .ok_or(AuthError::UserNotFound)?;
+
+        let mut active: user::ActiveModel = user.into();
+
+        if let Some(first_name) = data.first_name {
+            active.first_name = Set(Some(first_name));
+        }
+        if let Some(last_name) = data.last_name {
+            active.last_name = Set(Some(last_name));
+        }
+
+        let updated = active.update(db).await?;
+        Ok(updated)
+    }
+
+    pub async fn update_password(
+        db: &DatabaseConnection,
+        user_id: i32,
+        new_hash: String,
+    ) -> Result<(), AppError> {
+        let user = user::ActiveModel {
+            id: Set(user_id),
+            hashed_password: Set(new_hash),
+            ..Default::default()
+        };
+
+        user.update(db).await?;
+        Ok(())
+    }
+
+    pub async fn get_by_id(db: &DatabaseConnection, id: i32) -> Result<user::Model, AppError> {
+        User::find_by_id(id)
+            .one(db)
+            .await?
+            .ok_or(AuthError::UserNotFound.into())
     }
 }
