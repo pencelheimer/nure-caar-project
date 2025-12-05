@@ -122,4 +122,25 @@ impl Devices {
 
         Ok(())
     }
+
+    pub async fn rotate_api_key(
+        db: &DatabaseConnection,
+        id: i32,
+        user_id: i32,
+    ) -> Result<String, AppError> {
+        let device = Self::find_by_id_and_user(db, id, user_id)
+            .await?
+            .ok_or_else(|| ResourceError::NotFound {
+                msg: "Device not found".into(),
+            })?;
+
+        let new_key = Uuid::new_v4().to_string();
+
+        let mut active: device::ActiveModel = device.into();
+        active.api_key = Set(new_key.clone());
+
+        active.update(db).await?;
+
+        Ok(new_key)
+    }
 }

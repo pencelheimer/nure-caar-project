@@ -61,3 +61,9 @@ pub struct DeviceResponse {
     pub last_seen: Option<DateTime<FixedOffset>>,
     pub api_key: String,
 }
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct DeviceKeyResponse {
+    pub device_id: i32,
+    pub new_api_key: String,
+}

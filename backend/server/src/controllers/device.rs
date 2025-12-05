@@ -6,6 +6,7 @@ use crate::{
     utils::fns::masked_api_key,
     views::device::{
         CreateDeviceRequest, //
+        DeviceKeyResponse,
         DeviceResponse,
         DeviceStatus,
         UpdateDeviceRequest,
@@ -28,6 +29,7 @@ pub fn register_routes() -> OpenApiRouter<AppState> {
         .routes(routes!(create_device))
         .routes(routes!(update_device))
         .routes(routes!(delete_device))
+        .routes(routes!(rotate_device_key))
 }
 
 /// List all devices
@@ -155,4 +157,34 @@ pub async fn delete_device(
 ) -> Result<StatusCode, AppError> {
     Devices::delete(&state.db, id, user.id).await?;
     Ok(StatusCode::NO_CONTENT)
+}
+
+/// Rotate API Key
+///
+/// Generates a new API Key for the device. The old key will stop working immediately.
+#[utoipa::path(
+    post,
+    path = "/devices/{id}/rotate-key",
+    params(
+        ("id" = i32, Path, description = "Device ID")
+    ),
+    responses(
+        (status = 200, description = "Key rotated successfully", body = DeviceKeyResponse),
+        (status = 404, description = "Device not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    tag = "Devices",
+    security(("jwt" = []))
+)]
+pub async fn rotate_device_key(
+    State(state): State<AppState>,
+    user: AuthUser,
+    Path(id): Path<i32>,
+) -> Result<Json<DeviceKeyResponse>, AppError> {
+    let new_key = Devices::rotate_api_key(&state.db, id, user.id).await?;
+
+    Ok(Json(DeviceKeyResponse {
+        device_id: id,
+        new_api_key: new_key,
+    }))
 }
