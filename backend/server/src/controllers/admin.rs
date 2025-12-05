@@ -7,7 +7,7 @@ use crate::{
     models::{
         audit::AuditLogs, //
         system::System,
-        user::Users
+        user::Users,
     },
     state::AppState,
     views::admin::*,
@@ -31,6 +31,9 @@ pub fn register_routes() -> OpenApiRouter<AppState> {
         .routes(routes!(update_user_role))
         .routes(routes!(get_system_stats))
         .routes(routes!(get_audit_logs))
+        .routes(routes!(get_user_details))
+        .routes(routes!(ban_user))
+        .routes(routes!(delete_user))
 }
 
 /// List all users
@@ -49,19 +52,7 @@ pub async fn list_users(
 ) -> Result<Json<Vec<AdminUserDetailsResponse>>, AppError> {
     let users_with_stats = Users::find_all_with_stats(&state.db).await?;
 
-    let response = users_with_stats
-        .into_iter()
-        .map(|u| AdminUserDetailsResponse {
-            id: u.id,
-            email: u.email,
-            first_name: u.first_name,
-            last_name: u.last_name,
-            role: u.role.into(),
-            created_at: u.created_at.unwrap_or_default(),
-            reservoirs_count: u.reservoirs_count as u64,
-            devices_count: u.devices_count as u64,
-        })
-        .collect();
+    let response = users_with_stats.into_iter().map(Into::into).collect();
 
     Ok(Json(response))
 }
@@ -145,18 +136,93 @@ pub async fn get_audit_logs(
 ) -> Result<Json<Vec<LogEntryResponse>>, AppError> {
     let logs = AuditLogs::find_filtered(&state.db, params).await?;
 
-    let response = logs
-        .into_iter()
-        .map(|log| LogEntryResponse {
-            id: log.id.to_string(),
-            table_name: log.table_name,
-            record_id: log.record_id,
-            operation: log.operation,
-            old_values: log.old_values,
-            new_values: log.new_values,
-            changed_at: log.changed_at.unwrap(), // there is DEFAULT constraint in the db
-        })
-        .collect();
+    let response = logs.into_iter().map(Into::into).collect();
 
     Ok(Json(response))
+}
+
+/// Get user details by ID
+#[utoipa::path(
+    get,
+    path = "/admin/users/{id}",
+    params(
+        ("id" = i32, Path, description = "User ID")
+    ),
+    responses(
+        (status = 200, description = "User details", body = AdminUserDetailsResponse),
+        (status = 404, description = "User not found")
+    ),
+    tag = "Admin",
+    security(("jwt" = []))
+)]
+pub async fn get_user_details(
+    State(state): State<AppState>,
+    _admin: AuthAdmin,
+    Path(id): Path<i32>,
+) -> Result<Json<AdminUserDetailsResponse>, AppError> {
+    let user = Users::find_by_id_with_stats(&state.db, id)
+        .await?
+        .ok_or(AuthError::UserNotFound)?;
+
+    Ok(Json(user.into()))
+}
+
+/// Ban or Unban a user
+#[utoipa::path(
+    post,
+    path = "/admin/users/{id}/ban",
+    params(
+        ("id" = i32, Path, description = "User ID")
+    ),
+    request_body = BanUserRequest,
+    responses(
+        (status = 200, description = "User ban status updated"),
+        (status = 404, description = "User not found"),
+        (status = 403, description = "Cannot ban yourself")
+    ),
+    tag = "Admin",
+    security(("jwt" = []))
+)]
+pub async fn ban_user(
+    State(state): State<AppState>,
+    admin: AuthAdmin,
+    Path(target_id): Path<i32>,
+    Json(payload): Json<BanUserRequest>,
+) -> Result<StatusCode, AppError> {
+    if target_id == admin.0.id {
+        return Err(AuthError::PermissionDenied)?;
+    }
+
+    Users::set_ban_status(&state.db, target_id, payload.is_banned, payload.ban_reason).await?;
+
+    Ok(StatusCode::OK)
+}
+
+/// Delete a user
+#[utoipa::path(
+    delete,
+    path = "/admin/users/{id}",
+    params(
+        ("id" = i32, Path, description = "User ID")
+    ),
+    responses(
+        (status = 204, description = "User deleted"),
+        (status = 404, description = "User not found"),
+        (status = 403, description = "Cannot delete yourself")
+    ),
+    tag = "Admin",
+    security(("jwt" = []))
+)]
+pub async fn delete_user(
+    State(state): State<AppState>,
+    admin: AuthAdmin,
+    Path(target_id): Path<i32>,
+) -> Result<StatusCode, AppError> {
+    if target_id == admin.0.id {
+        return Err(AuthError::PermissionDenied)?;
+    }
+
+    Users::delete(&state.db, target_id).await?;
+
+    Ok(StatusCode::NO_CONTENT)
 }

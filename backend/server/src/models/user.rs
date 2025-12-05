@@ -27,9 +27,18 @@ pub struct UserWithStats {
     pub created_at: Option<DateTimeWithTimeZone>,
     pub reservoirs_count: i64,
     pub devices_count: i64,
+    pub is_banned: bool,
+    pub ban_reason: Option<String>,
 }
 
 impl Users {
+    pub async fn get_by_id(db: &DatabaseConnection, id: i32) -> Result<user::Model, AppError> {
+        User::find_by_id(id)
+            .one(db)
+            .await?
+            .ok_or(AuthError::UserNotFound.into())
+    }
+
     pub async fn find_by_id(
         db: &DatabaseConnection,
         id: i32,
@@ -49,6 +58,38 @@ impl Users {
         Ok(user)
     }
 
+    pub async fn find_by_id_with_stats(
+        db: &DatabaseConnection,
+        id: i32,
+    ) -> Result<Option<UserWithStats>, AppError> {
+        let user = User::find_by_id(id)
+            .select_only()
+            .column(user::Column::Id)
+            .column(user::Column::Email)
+            .column(user::Column::FirstName)
+            .column(user::Column::LastName)
+            .column(user::Column::Role)
+            .column(user::Column::CreatedAt)
+            .column(user::Column::IsBanned)
+            .column(user::Column::BanReason)
+            .column_as(
+                sea_query::Expr::col((reservoir::Entity, reservoir::Column::Id)).count_distinct(),
+                "reservoirs_count",
+            )
+            .column_as(
+                sea_query::Expr::col((device::Entity, device::Column::Id)).count_distinct(),
+                "devices_count",
+            )
+            .left_join(Reservoir)
+            .left_join(Device)
+            .group_by(user::Column::Id)
+            .into_model::<UserWithStats>()
+            .one(db)
+            .await?;
+
+        Ok(user)
+    }
+
     pub async fn exists_by_email(db: &DatabaseConnection, email: &str) -> Result<bool, AppError> {
         let count = User::find()
             .filter(user::Column::Email.eq(email))
@@ -56,6 +97,47 @@ impl Users {
             .await?;
 
         Ok(count > 0)
+    }
+
+    // NOTE(pencelheimer): add pagination?
+    pub async fn find_all(db: &DatabaseConnection) -> Result<Vec<user::Model>, AppError> {
+        let users = User::find()
+            .order_by_desc(user::Column::CreatedAt)
+            .all(db)
+            .await?;
+        Ok(users)
+    }
+
+    pub async fn find_all_with_stats(
+        db: &DatabaseConnection,
+    ) -> Result<Vec<UserWithStats>, AppError> {
+        let users = User::find()
+            .select_only()
+            .column(user::Column::Id)
+            .column(user::Column::Email)
+            .column(user::Column::FirstName)
+            .column(user::Column::LastName)
+            .column(user::Column::Role)
+            .column(user::Column::CreatedAt)
+            .column(user::Column::IsBanned)
+            .column(user::Column::BanReason)
+            .column_as(
+                sea_query::Expr::col((reservoir::Entity, reservoir::Column::Id)).count_distinct(),
+                "reservoirs_count",
+            )
+            .column_as(
+                sea_query::Expr::col((device::Entity, device::Column::Id)).count_distinct(),
+                "devices_count",
+            )
+            .left_join(Reservoir)
+            .left_join(Device)
+            .group_by(user::Column::Id)
+            .order_by_desc(user::Column::CreatedAt)
+            .into_model::<UserWithStats>()
+            .all(db)
+            .await?;
+
+        Ok(users)
     }
 
     pub async fn create(
@@ -80,45 +162,6 @@ impl Users {
         Ok(user)
     }
 
-    // NOTE(pencelheimer): add pagination?
-    pub async fn find_all(db: &DatabaseConnection) -> Result<Vec<user::Model>, AppError> {
-        let users = User::find()
-            .order_by_desc(user::Column::CreatedAt)
-            .all(db)
-            .await?;
-        Ok(users)
-    }
-
-    pub async fn find_all_with_stats(
-        db: &DatabaseConnection,
-    ) -> Result<Vec<UserWithStats>, AppError> {
-        let users = User::find()
-            .select_only()
-            .column(user::Column::Id)
-            .column(user::Column::Email)
-            .column(user::Column::FirstName)
-            .column(user::Column::LastName)
-            .column(user::Column::Role)
-            .column(user::Column::CreatedAt)
-            .column_as(
-                sea_query::Expr::col((reservoir::Entity, reservoir::Column::Id)).count_distinct(),
-                "reservoirs_count",
-            )
-            .column_as(
-                sea_query::Expr::col((device::Entity, device::Column::Id)).count_distinct(),
-                "devices_count",
-            )
-            .left_join(Reservoir)
-            .left_join(Device)
-            .group_by(user::Column::Id)
-            .order_by_desc(user::Column::CreatedAt)
-            .into_model::<UserWithStats>()
-            .all(db)
-            .await?;
-
-        Ok(users)
-    }
-
     pub async fn update_role(
         db: &DatabaseConnection,
         user_id: i32,
@@ -134,10 +177,6 @@ impl Users {
 
         let updated = user.update(db).await?;
         Ok(updated)
-    }
-
-    pub async fn count(db: &DatabaseConnection) -> Result<u64, AppError> {
-        Ok(User::find().count(db).await?)
     }
 
     pub async fn update_profile(
@@ -178,10 +217,34 @@ impl Users {
         Ok(())
     }
 
-    pub async fn get_by_id(db: &DatabaseConnection, id: i32) -> Result<user::Model, AppError> {
-        User::find_by_id(id)
+    pub async fn count(db: &DatabaseConnection) -> Result<u64, AppError> {
+        Ok(User::find().count(db).await?)
+    }
+
+    pub async fn set_ban_status(
+        db: &DatabaseConnection,
+        id: i32,
+        is_banned: bool,
+        reason: Option<String>,
+    ) -> Result<(), AppError> {
+        let user = User::find_by_id(id)
             .one(db)
             .await?
-            .ok_or(AuthError::UserNotFound.into())
+            .ok_or(AuthError::UserNotFound)?;
+
+        let mut active: user::ActiveModel = user.into();
+        active.is_banned = Set(is_banned);
+        active.ban_reason = Set(reason);
+
+        active.update(db).await?;
+        Ok(())
+    }
+
+    pub async fn delete(db: &DatabaseConnection, id: i32) -> Result<(), AppError> {
+        let res = User::delete_by_id(id).exec(db).await?;
+        if res.rows_affected == 0 {
+            return Err(AuthError::UserNotFound.into());
+        }
+        Ok(())
     }
 }

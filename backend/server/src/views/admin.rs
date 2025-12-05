@@ -1,3 +1,11 @@
+use crate::models::{
+    entities::{
+        audit_log::Model as DbAuditLog, //
+        sea_orm_active_enums::UserRole as DbUserRole,
+    },
+    user::UserWithStats,
+};
+
 use chrono::{
     DateTime, //
     FixedOffset,
@@ -11,8 +19,6 @@ use utoipa::{
     IntoParams, //
     ToSchema,
 };
-
-use crate::models::entities::sea_orm_active_enums::UserRole as DbUserRole;
 
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
@@ -52,6 +58,25 @@ pub struct AdminUserDetailsResponse {
     pub created_at: DateTime<FixedOffset>,
     pub reservoirs_count: u64,
     pub devices_count: u64,
+    pub is_banned: bool,
+    pub ban_reason: Option<String>,
+}
+
+impl From<UserWithStats> for AdminUserDetailsResponse {
+    fn from(val: UserWithStats) -> Self {
+        Self {
+            id: val.id,
+            email: val.email,
+            first_name: val.first_name,
+            last_name: val.last_name,
+            role: val.role.into(),
+            created_at: val.created_at.unwrap_or_default(),
+            reservoirs_count: val.reservoirs_count as u64,
+            devices_count: val.devices_count as u64,
+            is_banned: val.is_banned,
+            ban_reason: val.ban_reason,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -84,10 +109,30 @@ pub struct LogEntryResponse {
     pub changed_at: DateTime<FixedOffset>,
 }
 
+impl From<DbAuditLog> for LogEntryResponse {
+    fn from(val: DbAuditLog) -> Self {
+        Self {
+            id: val.id.to_string(),
+            table_name: val.table_name,
+            record_id: val.record_id,
+            operation: val.operation,
+            old_values: val.old_values,
+            new_values: val.new_values,
+            changed_at: val.changed_at.unwrap(), // there is DEFAULT constraint in the db
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct SystemStatsResponse {
     pub total_users: u64,
     pub total_reservoirs: u64,
     pub total_devices: u64,
     pub alert_rules_active: u64,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct BanUserRequest {
+    pub is_banned: bool,
+    pub ban_reason: Option<String>,
 }

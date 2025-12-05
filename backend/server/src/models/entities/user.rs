@@ -4,7 +4,7 @@
 
 use sea_orm :: entity :: prelude :: * ; use super :: sea_orm_active_enums :: UserRole ;
 
-# [derive (Clone , Debug , PartialEq , DeriveEntityModel , Eq)] # [sea_orm (table_name = "user")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , # [sea_orm (unique)] pub email : String , pub hashed_password : String , pub first_name : Option < String > , pub last_name : Option < String > , pub role : UserRole , pub created_at : Option < DateTimeWithTimeZone > , pub updated_at : Option < DateTimeWithTimeZone > , }
+# [derive (Clone , Debug , PartialEq , DeriveEntityModel , Eq)] # [sea_orm (table_name = "user")] pub struct Model { # [sea_orm (primary_key)] pub id : i32 , # [sea_orm (unique)] pub email : String , pub hashed_password : String , pub first_name : Option < String > , pub last_name : Option < String > , pub role : UserRole , pub created_at : Option < DateTimeWithTimeZone > , pub updated_at : Option < DateTimeWithTimeZone > , pub is_banned : bool , # [sea_orm (column_type = "Text" , nullable)] pub ban_reason : Option < String > , }
 
 # [derive (Copy , Clone , Debug , EnumIter , DeriveRelation)] pub enum Relation { # [sea_orm (has_many = "super::device::Entity")] Device , # [sea_orm (has_many = "super::reservoir::Entity")] Reservoir , }
 

@@ -1,4 +1,4 @@
-\restrict z56HocYJKZHPoScWjHheC4ueY1K6yiz18462YxA2lzXUOGVb1lBnmd0jjQwHMgW
+\restrict 4DbGygQMpxSLNE0LuDOVTkDKCaPN7xV7TMgn3ciBQcgKPeU1d1j3C6AGk2H8Ttt
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 17.7
@@ -347,6 +347,8 @@ CREATE TABLE public."user" (
     role public.user_role DEFAULT 'user'::public.user_role NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
+    is_banned boolean DEFAULT false NOT NULL,
+    ban_reason text,
     CONSTRAINT chk_email_format CHECK (((email)::text ~~ '%@%'::text))
 );
 
@@ -616,7 +618,7 @@ ALTER TABLE ONLY public.reservoir
 -- PostgreSQL database dump complete
 --
 
-\unrestrict z56HocYJKZHPoScWjHheC4ueY1K6yiz18462YxA2lzXUOGVb1lBnmd0jjQwHMgW
+\unrestrict 4DbGygQMpxSLNE0LuDOVTkDKCaPN7xV7TMgn3ciBQcgKPeU1d1j3C6AGk2H8Ttt
 
 
 --
@@ -631,4 +633,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20251203145000'),
     ('20251203145003'),
     ('20251203145007'),
-    ('20251203145010');
+    ('20251203145010'),
+    ('20251205110540');

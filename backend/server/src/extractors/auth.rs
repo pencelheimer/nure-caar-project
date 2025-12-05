@@ -64,6 +64,10 @@ impl FromRequestParts<AppState> for AuthUser {
 
         let user = user_model.ok_or(AuthError::UserNotFound)?;
 
+        if user.is_banned {
+            return Err(AuthError::PermissionDenied)?;
+        }
+
         Ok(AuthUser {
             id: user.id,
             email: user.email,
@@ -90,4 +94,3 @@ impl FromRequestParts<AppState> for AuthAdmin {
         Ok(AuthAdmin(user))
     }
 }
-
