@@ -8,7 +8,8 @@ use crate::{
         auth::AuthUser,
     },
     models::{
-        device::Devices, //
+        alert::Alerts, //
+        device::Devices,
         measurement::Measurements,
     },
     state::AppState,
@@ -57,7 +58,11 @@ pub async fn submit_measurement(
 ) -> Result<StatusCode, AppError> {
     Measurements::add(&state.db, device.id, payload.value, payload.timestamp).await?;
 
-    // TODO: check alerts
+    if let Some(id) = device.reservoir_id
+        && let Err(e) = Alerts::check_and_notify(&state.db, id, payload.value).await
+    {
+        tracing::error!("Error checking alerts: {:?}", e);
+    }
 
     Ok(StatusCode::CREATED)
 }

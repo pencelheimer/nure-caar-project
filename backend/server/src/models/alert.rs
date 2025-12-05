@@ -9,10 +9,16 @@ use crate::{
         alert_rule,
         prelude::*,
         reservoir,
-        sea_orm_active_enums,
-    }, views::alert::AlertHistoryQuery,
+        sea_orm_active_enums::{
+            AlertConditionType, //
+            AlertStatus,
+        },
+    },
+    services::notification::NotificationService,
+    views::alert::AlertHistoryQuery,
 };
 
+use chrono::Utc;
 use sea_orm::*;
 
 pub struct Alerts;
@@ -47,7 +53,7 @@ impl Alerts {
         db: &DatabaseConnection,
         reservoir_id: i32,
         user_id: i32,
-        condition: sea_orm_active_enums::AlertConditionType,
+        condition: AlertConditionType,
         threshold: f64,
     ) -> Result<alert_rule::Model, AppError> {
         let reservoir =
@@ -78,7 +84,7 @@ impl Alerts {
         db: &DatabaseConnection,
         rule_id: i32,
         user_id: i32,
-        condition: Option<sea_orm_active_enums::AlertConditionType>,
+        condition: Option<AlertConditionType>,
         threshold: Option<f64>,
         is_active: Option<bool>,
     ) -> Result<alert_rule::Model, AppError> {
@@ -159,5 +165,71 @@ impl Alerts {
             .await?;
 
         Ok(alerts)
+    }
+
+    pub async fn check_and_notify(
+        db: &DatabaseConnection,
+        reservoir_id: i32,
+        value: f64,
+    ) -> Result<(), AppError> {
+        let result = Reservoir::find_by_id(reservoir_id)
+            .find_also_related(User)
+            .one(db)
+            .await?;
+
+        let (reservoir, user) = match result {
+            Some((r, Some(u))) => (r, u),
+            _ => return Ok(()),
+        };
+
+        let user_email = user.email;
+
+        let rules = AlertRule::find()
+            .filter(alert_rule::Column::ReservoirId.eq(reservoir_id))
+            .filter(alert_rule::Column::IsActive.eq(true))
+            .all(db)
+            .await?;
+
+        for rule in rules {
+            let triggered = match rule.condition_type {
+                AlertConditionType::GreaterThan => value > rule.threshold,
+                AlertConditionType::LessThan => value < rule.threshold,
+                AlertConditionType::Equals => (value - rule.threshold).abs() < f64::EPSILON,
+            };
+
+            if triggered {
+                let message = format!(
+                    "Alert for {}: Value {:.2} is {:?} threshold {:.2}",
+                    reservoir.name, value, rule.condition_type, rule.threshold
+                );
+
+                let send_result = NotificationService::send_email(
+                    &user_email,
+                    "SmartTank Alert Triggered",
+                    &message,
+                )
+                .await;
+
+                let status = match send_result {
+                    Ok(_) => AlertStatus::Sent,
+                    Err(e) => {
+                        tracing::error!("Failed to send alert email: {:?}", e);
+                        AlertStatus::Failed
+                    }
+                };
+
+                let alert_log = alert::ActiveModel {
+                    rule_id: Set(rule.id),
+                    sent_to: Set(user_email.clone()),
+                    status: Set(status),
+                    triggered_at: Set(Utc::now().into()),
+                    ..Default::default()
+                };
+
+                alert_log.insert(db).await?;
+            }
+        }
+
+        Ok(())
     }
 }

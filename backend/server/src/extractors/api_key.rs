@@ -6,6 +6,7 @@ use crate::{
     models::entities::{
         device, //
         prelude::Device,
+        prelude::User,
     },
     state::AppState,
 };
@@ -41,12 +42,21 @@ impl FromRequestParts<AppState> for AuthDevice {
             .to_str()
             .map_err(|_| AuthError::InvalidToken)?;
 
-        let device_model = Device::find()
+        let result = Device::find()
             .filter(device::Column::ApiKey.eq(api_key))
+            .find_also_related(User)
             .one(&state.db)
             .await?;
 
-        let device = device_model.ok_or(AuthError::InvalidToken)?;
+        let (device, user) = match result {
+            Some((d, Some(u))) => (d, u),
+            Some((_, None)) => return Err(AuthError::PermissionDenied)?,
+            None => return Err(AuthError::InvalidToken)?,
+        };
+
+        if user.is_banned {
+            return Err(AuthError::PermissionDenied.into());
+        }
 
         Ok(AuthDevice {
             id: device.id,
