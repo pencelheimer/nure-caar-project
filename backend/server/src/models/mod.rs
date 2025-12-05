@@ -1,4 +1,5 @@
 #![allow(unused)]
+pub mod alert;
 pub mod audit;
 pub mod device;
 pub mod entities;

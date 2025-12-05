@@ -1,4 +1,5 @@
 mod admin;
+mod alert;
 mod auth;
 mod device;
 mod health;
@@ -52,6 +53,7 @@ pub fn api_router() -> axum::Router<AppState> {
     let (router, api) = OpenApiRouter::with_openapi(ApiSpec::openapi())
         .merge(health::register_routes())
         .merge(admin::register_routes())
+        .merge(alert::register_routes())
         .merge(auth::register_routes())
         .merge(device::register_routes())
         .merge(measurement::register_routes())
