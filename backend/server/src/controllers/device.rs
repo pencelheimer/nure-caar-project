@@ -57,7 +57,7 @@ pub async fn list_devices(
                 name: d.name,
                 reservoir_id: d.reservoir_id,
                 status: d.status.into(),
-                last_seen: d.last_seen.map(|t| t.into()),
+                last_seen: d.last_seen,
                 api_key: key_masked,
             }
         })
@@ -126,7 +126,7 @@ pub async fn update_device(
         name: updated.name,
         reservoir_id: updated.reservoir_id,
         status: updated.status.into(),
-        last_seen: updated.last_seen.map(|t| t.into()),
+        last_seen: updated.last_seen,
         api_key: masked_api_key(updated.api_key.as_str()),
     };
 

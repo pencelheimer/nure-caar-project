@@ -30,7 +30,6 @@ impl Measurements {
             time: Set(time),
             device_id: Set(device_id),
             value: Set(value),
-            ..Default::default()
         };
 
         let res = active_model.insert(db).await?;

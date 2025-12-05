@@ -95,7 +95,7 @@ pub async fn get_measurements(
     let response = history
         .into_iter()
         .map(|m| MeasurementResponse {
-            time: m.time.into(),
+            time: m.time,
             value: m.value,
             device_id: m.device_id,
         })
