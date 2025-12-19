@@ -15,7 +15,7 @@ pub struct InfoMode<'a> {
 
 impl<'a> InfoMode<'a> {
     pub fn new(hw: &mut SystemHardware<'a>) -> Option<Self> {
-        if let Some(display) = hw.enable_display() {
+        if let Some(display) = hw.display() {
             Some(Self { display })
         } else {
             log::error!("Can't initialize display for info mode");

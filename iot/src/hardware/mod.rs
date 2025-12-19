@@ -1,8 +1,10 @@
 mod button;
 mod display;
+mod sensor;
 
-pub use button::BoardButton as Button;
+pub use button::Button;
 pub use display::Display;
+pub use sensor::Sensor;
 
 use embassy_time::Timer;
 use esp_hal::{
@@ -22,6 +24,9 @@ pub struct SystemHardware<'a> {
 
     button_pin: Option<AnyPin<'a>>,
 
+    sensor_trig_pin: Option<AnyPin<'a>>,
+    sensor_echo_pin: Option<AnyPin<'a>>,
+
     rtc: Rtc<'a>,
 }
 
@@ -31,6 +36,8 @@ impl<'a> SystemHardware<'a> {
         display_sda: AnyPin<'a>,
         display_scl: AnyPin<'a>,
         button_pin: AnyPin<'a>,
+        trig_pin: AnyPin<'a>,
+        echo_pin: AnyPin<'a>,
         lpwr: LPWR<'a>,
     ) -> Self {
         Self {
@@ -38,11 +45,13 @@ impl<'a> SystemHardware<'a> {
             display_sda: Some(display_sda),
             display_scl: Some(display_scl),
             button_pin: Some(button_pin),
+            sensor_trig_pin: Some(trig_pin),
+            sensor_echo_pin: Some(echo_pin),
             rtc: Rtc::new(lpwr),
         }
     }
 
-    pub fn enable_display(&mut self) -> Option<Display<'a>> {
+    pub fn display(&mut self) -> Option<Display<'a>> {
         if let (Some(i2c), Some(sda), Some(scl)) = (
             self.display_i2c.take(),
             self.display_sda.take(),
@@ -57,6 +66,19 @@ impl<'a> SystemHardware<'a> {
     pub fn button(&mut self) -> Option<Button<'_>> {
         if let Some(button_pin) = self.button_pin.as_mut() {
             Some(Button::new(button_pin.reborrow()))
+        } else {
+            None
+        }
+    }
+
+    pub fn sensor(&mut self) -> Option<Sensor<'_>> {
+        if let Some(trig_pin) = self.sensor_trig_pin.as_mut()
+            && let Some(echo_pin) = self.sensor_echo_pin.as_mut()
+        {
+            let trig = trig_pin.reborrow();
+            let echo = echo_pin.reborrow();
+
+            Some(Sensor::new(trig, echo))
         } else {
             None
         }

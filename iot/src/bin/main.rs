@@ -8,19 +8,12 @@
 #![deny(clippy::large_stack_frames)]
 
 use embassy_executor::Spawner;
-use embassy_time::{Duration, Timer};
+use embassy_time::{
+    Duration, //
+    Timer,
+};
 use esp_hal::{
-    clock::CpuClock,
-    gpio::{AnyPin, Input, InputConfig, Pin},
-    peripherals::LPWR,
-    rtc_cntl::{
-        Rtc,
-        sleep::{
-            Ext0WakeupSource, //
-            TimerWakeupSource,
-            WakeupLevel,
-        },
-    },
+    clock::CpuClock, //
     system::wakeup_cause,
     timer::timg::TimerGroup,
 };
@@ -48,7 +41,7 @@ async fn main(spawner: Spawner) {
     esp_println::logger::init_logger_from_env();
 
     let config = esp_hal::Config::default().with_cpu_clock(CpuClock::max());
-    let mut p = esp_hal::init(config);
+    let p = esp_hal::init(config);
 
     esp_alloc::heap_allocator!(#[esp_hal::ram(reclaimed)] size: 98768);
 
@@ -60,6 +53,8 @@ async fn main(spawner: Spawner) {
         p.GPIO21.into(),
         p.GPIO22.into(),
         p.GPIO0.into(),
+        p.GPIO19.into(),
+        p.GPIO18.into(),
         p.LPWR,
     );
 
@@ -73,7 +68,7 @@ async fn main(spawner: Spawner) {
 
             if button.is_long_press().await {
                 log::info!("Entering Setup Mode");
-                run_config_mode().await;
+                Timer::after(Duration::from_millis(500)).await;
             } else {
                 log::info!("Entering Info Mode");
                 if let Some(mut mode) = InfoMode::new(&mut hw) {
@@ -81,13 +76,18 @@ async fn main(spawner: Spawner) {
                 }
             }
         }
-        esp_hal::system::SleepSource::Timer => {
+        esp_hal::system::SleepSource::Timer | _ => {
             log::info!("Entering Meassure Mode");
-            run_measurement_mode().await;
-        }
-        _ => {
-            log::info!("Entering Meassure Mode");
-            run_measurement_mode().await;
+            if let Some(mut sensor) = hw.sensor() {
+                let mut measurements = [0.0; 5];
+                for i in 0..5 {
+                    if let Some(dist) = sensor.measure().await {
+                        measurements[i] = dist;
+                        log::info!("Sample {}: {:.2} cm", i + 1, dist);
+                    }
+                    embassy_time::Timer::after_millis(200).await;
+                }
+            }
         }
     }
 
@@ -100,12 +100,4 @@ async fn main(spawner: Spawner) {
     let _ = spawner;
 
     hw.deep_sleep(Duration::from_secs(5)).await;
-}
-
-async fn run_config_mode() {
-    Timer::after(Duration::from_millis(500)).await;
-}
-
-async fn run_measurement_mode() {
-    Timer::after(Duration::from_millis(500)).await;
 }

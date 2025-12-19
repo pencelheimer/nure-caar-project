@@ -8,11 +8,11 @@ use esp_hal::gpio::{
     InputConfig,
 };
 
-pub struct BoardButton<'a> {
+pub struct Button<'a> {
     input: Input<'a>,
 }
 
-impl<'a> BoardButton<'a> {
+impl<'a> Button<'a> {
     pub fn new(pin: AnyPin<'a>) -> Self {
         Self {
             input: Input::new(pin, InputConfig::default()),
