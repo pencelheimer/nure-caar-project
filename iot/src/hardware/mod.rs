@@ -1,9 +1,11 @@
 mod button;
 mod display;
+mod memory;
 mod sensor;
 
 pub use button::Button;
 pub use display::Display;
+pub use memory::{Config, Measurement, Memory};
 pub use sensor::Sensor;
 
 use embassy_time::Timer;
@@ -13,7 +15,7 @@ use esp_hal::{
     peripherals::LPWR,
     rtc_cntl::{
         Rtc,
-        sleep::{Ext0WakeupSource, TimerWakeupSource, WakeupLevel},
+        sleep::{Ext0WakeupSource, RtcSleepConfig, TimerWakeupSource, WakeupLevel},
     },
 };
 
@@ -26,6 +28,8 @@ pub struct SystemHardware<'a> {
 
     sensor_trig_pin: Option<AnyPin<'a>>,
     sensor_echo_pin: Option<AnyPin<'a>>,
+
+    memory: Option<Memory>,
 
     rtc: Rtc<'a>,
 }
@@ -40,6 +44,7 @@ impl<'a> SystemHardware<'a> {
         echo_pin: AnyPin<'a>,
         lpwr: LPWR<'a>,
     ) -> Self {
+        let memory = Memory::init();
         Self {
             display_i2c: Some(display_i2c),
             display_sda: Some(display_sda),
@@ -47,6 +52,7 @@ impl<'a> SystemHardware<'a> {
             button_pin: Some(button_pin),
             sensor_trig_pin: Some(trig_pin),
             sensor_echo_pin: Some(echo_pin),
+            memory: Some(memory),
             rtc: Rtc::new(lpwr),
         }
     }
@@ -84,22 +90,28 @@ impl<'a> SystemHardware<'a> {
         }
     }
 
+    pub fn memory(&mut self) -> Option<Memory> {
+        self.memory.take()
+    }
+
     pub async fn deep_sleep(&mut self, duration: embassy_time::Duration) -> ! {
         log::info!("Entering deep sleep for {}ms", duration.as_millis());
 
         // HACK(pencelheimer): delay for logs to appear in the console
         Timer::after_millis(100).await;
 
+        let mut cfg = RtcSleepConfig::deep();
+        cfg.set_rtc_slowmem_pd_en(false);
+
         let timer_source = TimerWakeupSource::new(duration.into());
 
-        let button_pin_raw = if let Some(pin) = self.button_pin.as_mut() {
-            pin.reborrow()
-        } else {
-            panic!("Can't sleep! No pin available")
-        };
+        let ext_source = Ext0WakeupSource::new(
+            self.button_pin.as_mut().unwrap().reborrow(),
+            WakeupLevel::Low,
+        );
 
-        let ext_source = Ext0WakeupSource::new(button_pin_raw, WakeupLevel::Low);
+        self.rtc.sleep(&cfg, &[&timer_source, &ext_source]);
 
-        self.rtc.sleep_deep(&[&timer_source, &ext_source]);
+        loop {}
     }
 }

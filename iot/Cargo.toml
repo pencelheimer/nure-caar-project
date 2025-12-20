@@ -65,6 +65,12 @@ static_cell      = "2.1.1"
 ssd1306 = "0.10"
 embedded-graphics = "0.8"
 
+heapless = { version = "0.9.2", features = ["serde"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+postcard = "1.0"
+esp-storage = { version = "0.3", features = ["esp32"] }
+embedded-storage = "0.3"
+
 [profile.dev]
 # Rust debug is too slow.
 # For debug builds always builds with some optimization
@@ -78,3 +84,9 @@ incremental      = false
 lto              = 'fat'
 opt-level        = 's'
 overflow-checks  = false
+
+[profile.dev.package.esp-storage]
+opt-level = 3
+
+[profile.release.package.esp-storage]
+opt-level = 3
