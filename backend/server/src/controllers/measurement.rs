@@ -38,13 +38,14 @@ pub fn register_routes() -> OpenApiRouter<AppState> {
 
 /// Submit measurement data (from Device)
 ///
+/// Accepts a list of measurements.
 /// Requires API Key in header `x-api-key`
 #[utoipa::path(
     post,
     path = "/devices/measurements",
-    request_body = SubmitMeasurementRequest,
+    request_body = Vec<SubmitMeasurementRequest>,
     responses(
-        (status = 201, description = "Measurement accepted"),
+        (status = 201, description = "Measurements accepted"),
         (status = 404, description = "Device not found"),
         (status = 403, description = "Invalid API Key")
     ),
@@ -54,14 +55,26 @@ pub fn register_routes() -> OpenApiRouter<AppState> {
 pub async fn submit_measurement(
     State(state): State<AppState>,
     device: AuthDevice,
-    Json(payload): Json<SubmitMeasurementRequest>,
+    Json(measurements): Json<Vec<SubmitMeasurementRequest>>,
 ) -> Result<StatusCode, AppError> {
-    Measurements::add(&state.db, device.id, payload.value, payload.timestamp).await?;
+    for measurement in measurements {
+        Measurements::add(
+            &state.db,
+            device.id,
+            measurement.value,
+            measurement.timestamp,
+        )
+        .await?;
 
-    if let Some(id) = device.reservoir_id
-        && let Err(e) = Alerts::check_and_notify(&state.db, id, payload.value).await
-    {
-        tracing::error!("Error checking alerts: {:?}", e);
+        if let Some(id) = device.reservoir_id {
+            if let Err(e) = Alerts::check_and_notify(&state.db, id, measurement.value).await {
+                tracing::error!(
+                    "Error checking alerts for measurement val={}: {:?}",
+                    measurement.value,
+                    e
+                );
+            }
+        }
     }
 
     Ok(StatusCode::CREATED)
