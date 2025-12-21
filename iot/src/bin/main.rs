@@ -20,7 +20,7 @@ use esp_hal::{
 
 use iot_no_std::{
     hardware::SystemHardware, //
-    operation_mods::info::InfoMode,
+    operation_mods::{info::InfoMode, meassure::MeassureMode},
 };
 
 #[panic_handler]
@@ -56,8 +56,11 @@ async fn main(spawner: Spawner) {
         p.GPIO19.into(),
         p.GPIO18.into(),
         p.LPWR,
+        spawner,
+        p.WIFI,
     );
 
+    // hw.memory().unwrap().set_config(Default::default());
     let wakeup_cause = wakeup_cause();
 
     match wakeup_cause {
@@ -68,6 +71,7 @@ async fn main(spawner: Spawner) {
 
             if button.is_long_press().await {
                 log::info!("Entering Setup Mode");
+                hw.memory().unwrap().set_config(Default::default());
                 Timer::after(Duration::from_millis(500)).await;
             } else {
                 log::info!("Entering Info Mode");
@@ -78,26 +82,11 @@ async fn main(spawner: Spawner) {
         }
         esp_hal::system::SleepSource::Timer | _ => {
             log::info!("Entering Meassure Mode");
-            if let Some(mut sensor) = hw.sensor() {
-                let mut measurements = [0.0; 5];
-                for i in 0..5 {
-                    if let Some(dist) = sensor.measure().await {
-                        measurements[i] = dist;
-                        log::info!("Sample {}: {:.2} cm", i + 1, dist);
-                    }
-                    embassy_time::Timer::after_millis(200).await;
-                }
+            if let Some(mut mode) = MeassureMode::new(&mut hw) {
+                mode.run().await;
             }
         }
     }
 
-    // let radio_init = esp_radio::init().expect("Failed to initialize Wi-Fi/BLE controller");
-    // let (mut _wifi_controller, _interfaces) =
-    //     esp_radio::wifi::new(&radio_init, peripherals.WIFI, Default::default())
-    //         .expect("Failed to initialize Wi-Fi controller");
-
-    // TODO: Spawn some tasks
-    let _ = spawner;
-
-    hw.deep_sleep(Duration::from_secs(5)).await;
+    hw.deep_sleep(Duration::from_secs(2)).await;
 }

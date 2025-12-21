@@ -2,17 +2,21 @@ mod button;
 mod display;
 mod memory;
 mod sensor;
+mod wifi;
 
 pub use button::Button;
 pub use display::Display;
+use embassy_executor::Spawner;
 pub use memory::{Config, Measurement, Memory};
 pub use sensor::Sensor;
+pub use wifi::{NetworkStack, WifiHandle, WifiMode};
 
 use embassy_time::Timer;
 use esp_hal::{
     gpio::AnyPin,
     i2c::master::AnyI2c,
-    peripherals::LPWR,
+    peripherals::{LPWR, WIFI},
+    rng::Rng,
     rtc_cntl::{
         Rtc,
         sleep::{Ext0WakeupSource, RtcSleepConfig, TimerWakeupSource, WakeupLevel},
@@ -32,6 +36,10 @@ pub struct SystemHardware<'a> {
     memory: Option<Memory>,
 
     rtc: Rtc<'a>,
+
+    spawner: Spawner,
+    wifi_peripheral: Option<WIFI<'static>>,
+    rng: Option<Rng>,
 }
 
 impl<'a> SystemHardware<'a> {
@@ -43,6 +51,8 @@ impl<'a> SystemHardware<'a> {
         trig_pin: AnyPin<'a>,
         echo_pin: AnyPin<'a>,
         lpwr: LPWR<'a>,
+        spawner: Spawner,
+        wifi_peripheral: WIFI<'static>,
     ) -> Self {
         let memory = Memory::init();
         Self {
@@ -54,6 +64,9 @@ impl<'a> SystemHardware<'a> {
             sensor_echo_pin: Some(echo_pin),
             memory: Some(memory),
             rtc: Rtc::new(lpwr),
+            spawner,
+            wifi_peripheral: Some(wifi_peripheral),
+            rng: Some(Rng::new()),
         }
     }
 
@@ -113,5 +126,20 @@ impl<'a> SystemHardware<'a> {
         self.rtc.sleep(&cfg, &[&timer_source, &ext_source]);
 
         loop {}
+    }
+
+    fn init_wifi(&mut self, mode: WifiMode) -> Option<WifiHandle> {
+        let wifi = self.wifi_peripheral.take().expect("WiFi already consumed");
+        let rng = self.rng.take().expect("RNG already consumed");
+
+        Some(wifi::init(self.spawner, rng, wifi, mode))
+    }
+
+    pub fn wifi_client(&mut self) -> Option<WifiHandle> {
+        self.init_wifi(WifiMode::Client)
+    }
+
+    pub fn wifi_server(&mut self) -> Option<WifiHandle> {
+        self.init_wifi(WifiMode::AccessPoint)
     }
 }

@@ -28,6 +28,7 @@ embassy-net = { version = "0.7.1", features = [
   "medium-ethernet",
   "tcp",
   "udp",
+  "dns"
 ] }
 embedded-io = "0.7.1"
 embedded-io-async = "0.7.0"
@@ -70,6 +71,9 @@ serde = { version = "1.0", default-features = false, features = ["derive"] }
 postcard = "1.0"
 esp-storage = { version = "0.3", features = ["esp32"] }
 embedded-storage = "0.3"
+
+reqwless = { version = "0.13.0", default-features = false, features = [ "embedded-tls" ] }
+serde-json-core = "0.6"
 
 [profile.dev]
 # Rust debug is too slow.
