@@ -37,9 +37,10 @@ pub struct SystemHardware<'a> {
 
     rtc: Rtc<'a>,
 
-    spawner: Spawner,
     wifi_peripheral: Option<WIFI<'static>>,
     rng: Option<Rng>,
+
+    pub spawner: Spawner,
 }
 
 impl<'a> SystemHardware<'a> {
@@ -82,9 +83,9 @@ impl<'a> SystemHardware<'a> {
         }
     }
 
-    pub fn button(&mut self) -> Option<Button<'_>> {
-        if let Some(button_pin) = self.button_pin.as_mut() {
-            Some(Button::new(button_pin.reborrow()))
+    pub fn button(&self) -> Option<Button<'_>> {
+        if let Some(button_pin) = self.button_pin.as_ref() {
+            Some(Button::new(unsafe { button_pin.clone_unchecked() }))
         } else {
             None
         }

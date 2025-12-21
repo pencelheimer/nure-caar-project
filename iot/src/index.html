@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Water Sensor Setup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 5px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px; width: 100%; background: #007bff; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h2>Sensor Configuration</h2>
+    <form id="cfgForm">
+        <label>WiFi SSID:<input type="text" name="wifi_ssid" required></label>
+        <label>WiFi Pass:<input type="password" name="wifi_pass" required></label>
+        <label>Server URL:<input type="text" name="server_url" required></label>
+        <label>API Key:<input type="text" name="api_key" required></label>
+        <label>Tank Height (mm):<input type="number" step="0.1" name="tank_height_mm" required></label>
+        <label>Tank Volume (L):<input type="number" step="0.1" name="tank_volume_l" required></label>
+        <label>Sensor Offset (mm):<input type="number" step="0.1" name="sensor_offset_mm" required></label>
+        <button type="submit">Save & Reboot</button>
+    </form>
+    <script>
+        fetch('/config').then(r => r.json()).then(data => {
+            for (const key in data) {
+                if (document.getElementsByName(key)[0]) {
+                    document.getElementsByName(key)[0].value = data[key];
+                }
+            }
+        });
+
+        document.getElementById('cfgForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.tank_height_mm = parseFloat(data.tank_height_mm);
+            data.tank_volume_l = parseFloat(data.tank_volume_l);
+            data.sensor_offset_mm = parseFloat(data.sensor_offset_mm);
+            
+            try {
+                const res = await fetch('/config', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) alert('Saved! Please restart device.');
+                else alert('Error saving config');
+            } catch (err) { alert('Connection error'); }
+        };
+    </script>
+</body>
+</html>

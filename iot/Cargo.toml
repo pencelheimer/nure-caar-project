@@ -75,6 +75,9 @@ embedded-storage = "0.3"
 reqwless = { version = "0.13.0", default-features = false, features = [ "embedded-tls" ] }
 serde-json-core = "0.6"
 
+embassy-sync = "0.7"
+picoserve = { version="0.17", features=["embassy", "json"] }
+
 [profile.dev]
 # Rust debug is too slow.
 # For debug builds always builds with some optimization

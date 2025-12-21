@@ -8,10 +8,7 @@
 #![deny(clippy::large_stack_frames)]
 
 use embassy_executor::Spawner;
-use embassy_time::{
-    Duration, //
-    Timer,
-};
+use embassy_time::Duration;
 use esp_hal::{
     clock::CpuClock, //
     system::wakeup_cause,
@@ -20,7 +17,7 @@ use esp_hal::{
 
 use iot_no_std::{
     hardware::SystemHardware, //
-    operation_mods::{info::InfoMode, meassure::MeassureMode},
+    operation_mods::{info::InfoMode, meassure::MeassureMode, setup::SetupMode},
 };
 
 #[panic_handler]
@@ -71,8 +68,9 @@ async fn main(spawner: Spawner) {
 
             if button.is_long_press().await {
                 log::info!("Entering Setup Mode");
-                hw.memory().unwrap().set_config(Default::default());
-                Timer::after(Duration::from_millis(500)).await;
+                if let Some(mode) = SetupMode::new(&mut hw) {
+                    mode.run().await;
+                }
             } else {
                 log::info!("Entering Info Mode");
                 if let Some(mut mode) = InfoMode::new(&mut hw) {
@@ -88,5 +86,5 @@ async fn main(spawner: Spawner) {
         }
     }
 
-    hw.deep_sleep(Duration::from_secs(2)).await;
+    hw.deep_sleep(Duration::from_secs(10)).await;
 }
