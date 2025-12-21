@@ -1,10 +1,9 @@
 use embassy_net::dns::DnsSocket;
 use embassy_net::tcp::client::{TcpClient, TcpClientState};
 use embassy_time::{Duration, with_timeout};
-use esp_hal::rng::Rng;
 use esp_radio::wifi::ClientConfig;
-use heapless::{String, Vec};
-use reqwless::client::{HttpClient, TlsConfig};
+use heapless::Vec;
+use reqwless::client::HttpClient;
 use reqwless::headers::ContentType;
 use reqwless::request::{Method, RequestBuilder};
 use serde::Serialize;
@@ -15,9 +14,8 @@ const BATCH_SIZE: usize = 10;
 
 #[derive(Serialize)]
 struct TelemetryPayload {
-    value_liters: f64,
-    raw_distance_mm: f64,
-    timestamp: String<64>,
+    value: f64,
+    // timestamp: String<64>,
 }
 
 pub struct MeassureMode<'b> {
@@ -83,19 +81,29 @@ impl<'b> MeassureMode<'b> {
 
         let payloads: Vec<TelemetryPayload, BATCH_SIZE> = history
             .iter()
+            .filter(|m| !m.synced)
             .take(BATCH_SIZE)
             .map(|m| {
                 let liters = config.distance_to_liters(m.distance_mm);
                 TelemetryPayload {
-                    value_liters: liters,
-                    raw_distance_mm: m.distance_mm,
-                    timestamp: String::new(), // TODO: NTP?
+                    value: liters,
+                    // timestamp: String::new(), // TODO: NTP?
                 }
             })
             .collect();
 
+        if payloads.is_empty() {
+            log::info!("No new unsynced data to send.");
+            self.stop_wifi();
+            return;
+        }
+
         let sent_success = self
-            .send_telemetry_batch(config.server_url.as_str(), &payloads)
+            .send_telemetry_batch(
+                config.server_url.as_str(),
+                config.api_key.as_str(),
+                &payloads,
+            )
             .await;
 
         if sent_success {
@@ -165,14 +173,21 @@ impl<'b> MeassureMode<'b> {
         match controller.connect() {
             Ok(_) => {
                 log::info!("Wi-Fi connected! Waiting for IP...");
-                stack.wait_config_up().await;
 
-                if let Some(config) = stack.config_v4() {
-                    log::info!("IP Address: {}", config.address);
-                    true
-                } else {
-                    log::error!("DHCP failed: No IP config");
-                    false
+                match with_timeout(Duration::from_secs(10), stack.wait_config_up()).await {
+                    Ok(_) => {
+                        if let Some(config) = stack.config_v4() {
+                            log::info!("IP Address: {}", config.address);
+                            true
+                        } else {
+                            log::error!("DHCP failed: Config is up but empty (unexpected)");
+                            false
+                        }
+                    }
+                    Err(_) => {
+                        log::error!("DHCP Timeout: Could not get IP address in time");
+                        false
+                    }
                 }
             }
 
@@ -183,7 +198,12 @@ impl<'b> MeassureMode<'b> {
         }
     }
 
-    async fn send_telemetry_batch(&self, url: &str, payloads: &[TelemetryPayload]) -> bool {
+    async fn send_telemetry_batch(
+        &self,
+        url: &str,
+        api_key: &str,
+        payloads: &[TelemetryPayload],
+    ) -> bool {
         let json_string = match serde_json_core::to_string::<_, 2048>(payloads) {
             Ok(s) => s,
             Err(_) => {
@@ -228,7 +248,7 @@ impl<'b> MeassureMode<'b> {
                     request
                         .content_type(ContentType::ApplicationJson)
                         .body(json_string.as_bytes())
-                        .headers(&[("x-api-key", "db109afa-a395-42df-b4e6-954715e19b64")])
+                        .headers(&[("x-api-key", api_key)])
                         .send(&mut http_buf),
                 )
                 .await

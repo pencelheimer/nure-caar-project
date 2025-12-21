@@ -19,6 +19,7 @@ pub struct Config {
     pub wifi_ssid: String<32>,
     pub wifi_pass: String<64>,
     pub server_url: String<64>,
+    pub api_key: String<36>,
 }
 
 impl Default for Config {
@@ -30,6 +31,7 @@ impl Default for Config {
             wifi_ssid: String::try_from("csnz").unwrap(),
             wifi_pass: String::try_from("csnz01087CSNZ").unwrap(),
             server_url: String::try_from("http://192.168.0.244:3000/devices/measurements").unwrap(),
+            api_key: String::try_from("db109afa-a395-42df-b4e6-954715e19b64").unwrap(),
         }
     }
 }
@@ -192,7 +194,8 @@ impl Memory {
 
             (*state).measurements.clear();
 
-            if let Some(last) = last {
+            if let Some(mut last) = last {
+                last.synced = true;
                 self.add_measurement(last);
             }
         }
