@@ -17,10 +17,11 @@
         <label>WiFi Pass:<input type="password" name="wifi_pass" required></label>
         <label>Server URL:<input type="text" name="server_url" required></label>
         <label>API Key:<input type="text" name="api_key" required></label>
+        <label>Timeout (ms):<input type="number" step="1" name="timeout" required></label>
         <label>Tank Height (mm):<input type="number" step="0.1" name="tank_height_mm" required></label>
         <label>Tank Volume (L):<input type="number" step="0.1" name="tank_volume_l" required></label>
         <label>Sensor Offset (mm):<input type="number" step="0.1" name="sensor_offset_mm" required></label>
-        <button type="submit">Save & Reboot</button>
+        <button type="submit">Save</button>
     </form>
     <script>
         fetch('/config').then(r => r.json()).then(data => {
@@ -38,7 +39,8 @@
             data.tank_height_mm = parseFloat(data.tank_height_mm);
             data.tank_volume_l = parseFloat(data.tank_volume_l);
             data.sensor_offset_mm = parseFloat(data.sensor_offset_mm);
-            
+            data.timeout = parseInt(data.timeout);
+
             try {
                 const res = await fetch('/config', {
                     method: 'POST',

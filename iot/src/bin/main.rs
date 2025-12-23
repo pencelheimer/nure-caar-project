@@ -8,7 +8,6 @@
 #![deny(clippy::large_stack_frames)]
 
 use embassy_executor::Spawner;
-use embassy_time::Duration;
 use esp_hal::{
     clock::CpuClock, //
     system::wakeup_cause,
@@ -21,7 +20,9 @@ use iot_no_std::{
 };
 
 #[panic_handler]
-fn panic(_: &core::panic::PanicInfo) -> ! {
+fn panic(info: &core::panic::PanicInfo) -> ! {
+    log::error!("panicked at: {}", info.location().unwrap());
+    log::error!("with message: {}", info.message());
     loop {}
 }
 
@@ -86,5 +87,5 @@ async fn main(spawner: Spawner) {
         }
     }
 
-    hw.deep_sleep(Duration::from_secs(10)).await;
+    hw.deep_sleep(None).await;
 }

@@ -64,7 +64,7 @@ pub fn init(spawner: Spawner, rng: Rng, wifi: WIFI<'static>, mode: WifiMode) -> 
     let (stack, runner) = embassy_net::new(
         interface,
         config,
-        mk_static!(StackResources<3>, StackResources::<3>::new()),
+        mk_static!(StackResources<8>, StackResources::<8>::new()),
         net_seed + seed_offset,
     );
 

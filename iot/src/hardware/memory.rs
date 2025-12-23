@@ -20,6 +20,7 @@ pub struct Config {
     pub wifi_pass: String<64>,
     pub server_url: String<64>,
     pub api_key: String<36>,
+    pub timeout: u64,
 }
 
 impl Default for Config {
@@ -32,6 +33,7 @@ impl Default for Config {
             wifi_pass: String::try_from("csnz01087CSNZ").unwrap(),
             server_url: String::try_from("http://192.168.0.244:3000/devices/measurements").unwrap(),
             api_key: String::try_from("db109afa-a395-42df-b4e6-954715e19b64").unwrap(),
+            timeout: 10_000,
         }
     }
 }
@@ -86,6 +88,7 @@ impl Default for RtcState {
 #[ram(unstable(rtc_slow))]
 static mut RTC_STORAGE: MaybeUninit<RtcState> = MaybeUninit::uninit();
 
+#[derive(Clone, Copy)]
 pub struct Memory {
     _marker: (),
 }

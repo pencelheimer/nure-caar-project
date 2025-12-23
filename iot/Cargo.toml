@@ -78,6 +78,10 @@ serde-json-core = "0.6"
 embassy-sync = "0.7"
 picoserve = { version="0.17", features=["embassy", "json"] }
 
+thiserror-no-std = "2.0"
+
+esp-hal-dhcp-server = "0.2"
+
 [profile.dev]
 # Rust debug is too slow.
 # For debug builds always builds with some optimization

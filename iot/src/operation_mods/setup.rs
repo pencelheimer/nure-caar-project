@@ -1,3 +1,5 @@
+use core::net::Ipv4Addr;
+
 use crate::hardware::{Button, Config, Display, Memory, SystemHardware, WifiHandle};
 use embassy_executor::Spawner;
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
@@ -9,14 +11,16 @@ use embedded_graphics::{
     prelude::*,
     text::{Baseline, Text},
 };
+use esp_hal_dhcp_server::{simple_leaser::SimpleDhcpLeaser, structs::DhcpServerConfig};
 use esp_radio::wifi::{AccessPointConfig, ModeConfig};
 use heapless::String;
 use picoserve::{
-    AppBuilder, AppRouter,
+    AppBuilder, //
+    AppRouter,
     extract::{Json, State},
     make_static,
     response::File,
-    routing::{self, get, get_service},
+    routing::{self, get, get_service}
 };
 
 const INDEX_HTML: &str = include_str!("../index.html");
@@ -113,10 +117,7 @@ impl<'a> SetupMode<'a> {
             None
         })?;
 
-        let memory = hw.memory().or_else(|| {
-            log::error!("SetupMode: Memory missing");
-            None
-        })?;
+        let memory = hw.memory();
 
         let button = hw.button().or_else(|| {
             log::error!("SetupMode: Button missing");
@@ -212,6 +213,8 @@ impl<'a> SetupMode<'a> {
             .keep_connection_alive()
         );
 
+        self.spawner.must_spawn(dhcp_server(self.wifi_server.stack));
+
         for id in 0..WEB_TASK_POOL_SIZE {
             self.spawner
                 .must_spawn(web_task(id, self.wifi_server.stack, app, config));
@@ -244,4 +247,27 @@ impl<'a> SetupMode<'a> {
 
         embassy_time::Timer::after_secs(2).await;
     }
+}
+
+#[embassy_executor::task]
+async fn dhcp_server(stack: embassy_net::Stack<'static>) {
+    let server_ip = Ipv4Addr::new(192, 168, 4, 1);
+    let config = DhcpServerConfig {
+        ip: server_ip,
+        lease_time: Duration::from_secs(3600),
+        gateways: &[],
+        subnet: None,
+        dns: &[server_ip],
+        use_captive_portal: true,
+    };
+
+    let mut leaser = SimpleDhcpLeaser {
+        start: Ipv4Addr::new(192, 168, 4, 50),
+        end: Ipv4Addr::new(192, 168, 4, 200),
+        leases: Default::default(),
+    };
+
+    esp_hal_dhcp_server::run_dhcp_server(stack, config, &mut leaser)
+        .await
+        .expect("Failed to start DHCP server");
 }

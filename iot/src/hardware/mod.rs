@@ -11,7 +11,7 @@ pub use memory::{Config, Measurement, Memory};
 pub use sensor::Sensor;
 pub use wifi::{NetworkStack, WifiHandle, WifiMode};
 
-use embassy_time::Timer;
+use embassy_time::{Duration, Timer};
 use esp_hal::{
     gpio::AnyPin,
     i2c::master::AnyI2c,
@@ -33,7 +33,7 @@ pub struct SystemHardware<'a> {
     sensor_trig_pin: Option<AnyPin<'a>>,
     sensor_echo_pin: Option<AnyPin<'a>>,
 
-    memory: Option<Memory>,
+    memory: Memory,
 
     rtc: Rtc<'a>,
 
@@ -55,7 +55,6 @@ impl<'a> SystemHardware<'a> {
         spawner: Spawner,
         wifi_peripheral: WIFI<'static>,
     ) -> Self {
-        let memory = Memory::init();
         Self {
             display_i2c: Some(display_i2c),
             display_sda: Some(display_sda),
@@ -63,7 +62,7 @@ impl<'a> SystemHardware<'a> {
             button_pin: Some(button_pin),
             sensor_trig_pin: Some(trig_pin),
             sensor_echo_pin: Some(echo_pin),
-            memory: Some(memory),
+            memory: Memory::init(),
             rtc: Rtc::new(lpwr),
             spawner,
             wifi_peripheral: Some(wifi_peripheral),
@@ -104,11 +103,17 @@ impl<'a> SystemHardware<'a> {
         }
     }
 
-    pub fn memory(&mut self) -> Option<Memory> {
-        self.memory.take()
+    pub fn memory(&mut self) -> Memory {
+        self.memory
     }
 
-    pub async fn deep_sleep(&mut self, duration: embassy_time::Duration) -> ! {
+    pub async fn deep_sleep(&mut self, duration: Option<Duration>) -> ! {
+        let duration = if let Some(duration) = duration {
+            duration
+        } else {
+            Duration::from_millis(self.memory.get_config().timeout)
+        };
+
         log::info!("Entering deep sleep for {}ms", duration.as_millis());
 
         // HACK(pencelheimer): delay for logs to appear in the console

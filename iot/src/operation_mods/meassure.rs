@@ -7,8 +7,21 @@ use reqwless::client::HttpClient;
 use reqwless::headers::ContentType;
 use reqwless::request::{Method, RequestBuilder};
 use serde::Serialize;
+use thiserror_no_std::Error;
 
 use crate::hardware::{Measurement, Memory, Sensor, SystemHardware, WifiHandle};
+
+#[derive(Error)]
+enum ModeError {
+    #[error("Serde error")]
+    Serde(#[from] serde_json_core::ser::Error),
+
+    #[error("Reqwless error")]
+    Reqwless(#[from] reqwless::Error),
+
+    #[error("Timeout error")]
+    Timeout(#[from] embassy_time::TimeoutError),
+}
 
 const BATCH_SIZE: usize = 10;
 
@@ -30,10 +43,7 @@ impl<'b> MeassureMode<'b> {
             log::error!("MeassureMode: Failed to initialize. Wifi missing");
             None
         })?;
-        let memory = hw.memory().or_else(|| {
-            log::error!("MeassureMode: Failed to initialize. Memory missing");
-            None
-        })?;
+        let memory = hw.memory();
         let sensor = hw.sensor().or_else(|| {
             log::error!("MeassureMode: Failed to initialize. Sensor missing");
             None
@@ -77,7 +87,7 @@ impl<'b> MeassureMode<'b> {
             return;
         }
 
-        log::info!("Preparing to send {} records...", history.len());
+        log::info!("Preparing to send records...");
 
         let payloads: Vec<TelemetryPayload, BATCH_SIZE> = history
             .iter()
@@ -106,7 +116,7 @@ impl<'b> MeassureMode<'b> {
             )
             .await;
 
-        if sent_success {
+        if sent_success.is_ok() {
             log::info!("Batch sent successfully. Cleaning up history.");
             self.memory.clear_history_keeping_last();
         } else {
@@ -203,14 +213,11 @@ impl<'b> MeassureMode<'b> {
         url: &str,
         api_key: &str,
         payloads: &[TelemetryPayload],
-    ) -> bool {
-        let json_string = match serde_json_core::to_string::<_, 2048>(payloads) {
-            Ok(s) => s,
-            Err(_) => {
-                log::error!("JSON serialization error");
-                return false;
-            }
-        };
+    ) -> Result<bool, ModeError> {
+        let json_string = serde_json_core::to_string::<_, 2048>(payloads).map_err(|e| {
+            log::error!("{e:?}");
+            e
+        })?;
 
         let stack = self.wifi_client.stack;
         let dns = DnsSocket::new(stack);
@@ -241,32 +248,38 @@ impl<'b> MeassureMode<'b> {
 
         log::info!("Sending batch of {} items to {}", payloads.len(), url);
 
-        match client.request(Method::POST, url).await {
-            Ok(request) => {
-                match with_timeout(
-                    Duration::from_millis(2000),
-                    request
-                        .content_type(ContentType::ApplicationJson)
-                        .body(json_string.as_bytes())
-                        .headers(&[("x-api-key", api_key)])
-                        .send(&mut http_buf),
-                )
-                .await
-                {
-                    Ok(Ok(resp)) => {
-                        log::info!("Status: {:?}", resp.status);
-                        resp.status.is_successful()
-                    }
-                    e => {
-                        log::warn!("Send error: {:?}", e);
-                        false
-                    }
-                }
-            }
-            Err(e) => {
+        let raw_request = with_timeout(
+            Duration::from_millis(2000),
+            client.request(Method::POST, url),
+        )
+        .await
+        .map_err(|e| {
+            log::error!("{e:?}");
+            e
+        })?
+        .map_err(|e| {
+            log::error!("{e:?}");
+            e
+        })?;
+
+        let headers: Vec<_, 1> = Vec::from_slice(&[("x-api-key", api_key)]).unwrap();
+        let mut request = raw_request
+            .content_type(ContentType::ApplicationJson)
+            .body(json_string.as_bytes())
+            .headers(&headers);
+
+        let resp = with_timeout(Duration::from_millis(2000), request.send(&mut http_buf))
+            .await
+            .map_err(|e| {
                 log::error!("{e:?}");
-                false
-            }
-        }
+                e
+            })?
+            .map_err(|e| {
+                log::error!("{e:?}");
+                e
+            })?;
+
+        log::info!("Status: {:?}", resp.status);
+        Ok::<bool, ModeError>(resp.status.is_successful())
     }
 }

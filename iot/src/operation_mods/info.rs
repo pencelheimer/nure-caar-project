@@ -24,12 +24,7 @@ impl<'a> InfoMode<'a> {
             return None;
         };
 
-        let memory = if let Some(memory) = hw.memory() {
-            memory
-        } else {
-            log::error!("InfoMode: Failed to initialize. Memory missing");
-            return None;
-        };
+        let memory = hw.memory();
 
         log::info!("InfoMode: Initialized successfully");
         Some(Self { display, memory })
