@@ -1,4 +1,4 @@
-use server::{
+use backend::{
     config::Config, //
     controllers,
     error::AppError,
