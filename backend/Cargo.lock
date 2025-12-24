@@ -240,6 +240,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "backend"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "axum-extra",
+ "bcrypt",
+ "chrono",
+ "dotenvy",
+ "env_logger",
+ "error_set",
+ "headers",
+ "jsonwebtoken",
+ "sea-orm",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "utoipa",
+ "utoipa-axum",
+ "utoipa-scalar",
+ "uuid",
+]
+
+[[package]]
 name = "base16ct"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2257,33 +2284,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "server"
-version = "0.1.0"
-dependencies = [
- "axum",
- "axum-extra",
- "bcrypt",
- "chrono",
- "dotenvy",
- "env_logger",
- "error_set",
- "headers",
- "jsonwebtoken",
- "sea-orm",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "utoipa",
- "utoipa-axum",
- "utoipa-scalar",
- "uuid",
 ]
 
 [[package]]
