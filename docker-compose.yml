@@ -33,6 +33,9 @@ services:
     ports:
       - "6969:6969"
     environment:
+      JWT_SECRET: ${JWT_SECRET}
+      APP_HOST: ${APP_HOST}
+      APP_PORT: ${APP_PORT}
       DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}"
       RUST_LOG: info
     depends_on:
