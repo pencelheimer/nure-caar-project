@@ -1,9 +1,10 @@
 use embassy_net::dns::DnsSocket;
 use embassy_net::tcp::client::{TcpClient, TcpClientState};
 use embassy_time::{Duration, with_timeout};
+use esp_hal::rng::Rng;
 use esp_radio::wifi::ClientConfig;
 use heapless::Vec;
-use reqwless::client::HttpClient;
+use reqwless::client::{HttpClient, TlsConfig};
 use reqwless::headers::ContentType;
 use reqwless::request::{Method, RequestBuilder};
 use serde::Serialize;
@@ -227,24 +228,24 @@ impl<'b> MeassureMode<'b> {
 
         let mut http_buf = [0u8; 4096];
 
-        // let mut tls_rx = [0u8; 16384];
-        // let mut tls_tx = [0u8; 1024];
-        // let mut client = if url.starts_with("https://") {
-        //     let rng = Rng::new();
-        //     let tls_seed = (rng.random() as u64) | ((rng.random() as u64) << 32);
-        //     let tls = TlsConfig::new(
-        //         tls_seed,
-        //         &mut tls_rx,
-        //         &mut tls_tx,
-        //         reqwless::client::TlsVerify::None,
-        //     );
-        //
-        //     HttpClient::new_with_tls(&tcp, &dns, tls)
-        // } else {
-        //     HttpClient::new(&tcp, &dns)
-        // };
+        let mut tls_rx = [0u8; 16384];
+        let mut tls_tx = [0u8; 1024];
+        let mut client = if url.starts_with("https://") {
+            let rng = Rng::new();
+            let tls_seed = (rng.random() as u64) | ((rng.random() as u64) << 32);
+            let tls = TlsConfig::new(
+                tls_seed,
+                &mut tls_rx,
+                &mut tls_tx,
+                reqwless::client::TlsVerify::None,
+            );
 
-        let mut client = HttpClient::new(&tcp, &dns);
+            HttpClient::new_with_tls(&tcp, &dns, tls)
+        } else {
+            HttpClient::new(&tcp, &dns)
+        };
+
+        // let mut client = HttpClient::new(&tcp, &dns);
 
         log::info!("Sending batch of {} items to {}", payloads.len(), url);
 
