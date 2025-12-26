@@ -37,7 +37,6 @@ services:
       APP_HOST: ${APP_HOST}
       APP_PORT: ${APP_PORT}
       DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}"
-      RUST_LOG: info
     depends_on:
       migrator:
         condition: service_completed_successfully
