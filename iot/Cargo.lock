@@ -1413,7 +1413,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "iot-no-std"
+name = "iot"
 version = "0.1.0"
 dependencies = [
  "critical-section",
