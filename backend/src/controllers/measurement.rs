@@ -67,7 +67,7 @@ pub async fn submit_measurement(
         .await?;
 
         if let Some(id) = device.reservoir_id {
-            if let Err(e) = Alerts::check_and_notify(&state.db, id, measurement.value).await {
+            if let Err(e) = Alerts::check_and_notify(&state, id, measurement.value).await {
                 tracing::error!(
                     "Error checking alerts for measurement val={}: {:?}",
                     measurement.value,

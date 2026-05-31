@@ -7,6 +7,7 @@ pub mod alert_rule ;
 pub mod audit_log ;
 pub mod device ;
 pub mod measurement ;
+pub mod push_token ;
 pub mod reservoir ;
 pub mod schema_migrations ;
 pub mod system_settings ;

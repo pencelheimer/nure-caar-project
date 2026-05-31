@@ -4,6 +4,7 @@ mod auth;
 mod device;
 mod health;
 mod measurement;
+mod push_token;
 mod reservoir;
 
 use utoipa::{
@@ -57,6 +58,7 @@ pub fn api_router() -> axum::Router<AppState> {
         .merge(auth::register_routes())
         .merge(device::register_routes())
         .merge(measurement::register_routes())
+        .merge(push_token::register_routes())
         .merge(reservoir::register_routes())
         .split_for_parts();
 

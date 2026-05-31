@@ -3,6 +3,8 @@ set quiet
 
 mod backend "backend/backend.just"
 mod iot     "iot/iot.just"
+mod mobile  "mobile/mobile.just"
+mod seed    "seed/seed.just"
 
 k6_image := "grafana/k6:0.41.0"
 base_url := "http://localhost:8080"

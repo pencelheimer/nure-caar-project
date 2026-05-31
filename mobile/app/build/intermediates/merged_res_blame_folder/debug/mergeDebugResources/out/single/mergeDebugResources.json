@@ -1,0 +1,78 @@
+[
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xxxhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/home/pencelheimer/.gradle/daemon/8.11.1/com.smarttank.app-debug-63:/xml_locales_config.xml.flat",
+        "source": "/home/pencelheimer/.gradle/daemon/8.11.1/com.smarttank.app-main-65:/xml/locales_config.xml"
+    },
+    {
+        "merged": "/home/pencelheimer/.gradle/daemon/8.11.1/com.smarttank.app-debug-63:/drawable_ic_notification.xml.flat",
+        "source": "/home/pencelheimer/.gradle/daemon/8.11.1/com.smarttank.app-main-65:/drawable/ic_notification.xml"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xxhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-hdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-mdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.smarttank.app-debug-63:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.smarttank.app-main-65:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    }
+]

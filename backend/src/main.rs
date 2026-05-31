@@ -1,7 +1,8 @@
 use backend::{
-    config::Config, //
+    config::Config,
     controllers,
     error::AppError,
+    services::fcm::FcmClient,
     state::AppState,
 };
 
@@ -10,7 +11,7 @@ use std::result::Result;
 use tokio::net::TcpListener;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{
-    layer::SubscriberExt, //
+    layer::SubscriberExt,
     util::SubscriberInitExt,
 };
 
@@ -29,9 +30,29 @@ async fn main() -> Result<(), AppError> {
 
     let config: Config = Default::default();
     let db = Database::connect(config.db_connection_str()).await?;
+    let http = reqwest::Client::new();
+
+    let fcm = if config.firebase_service_account_json.is_empty() {
+        tracing::warn!("FIREBASE_SERVICE_ACCOUNT_JSON not set — push notifications disabled");
+        None
+    } else {
+        match FcmClient::from_json(&config.firebase_service_account_json, http.clone()) {
+            Ok(client) => {
+                tracing::info!("FCM client initialised for project '{}'", client.project_id());
+                Some(client)
+            }
+            Err(e) => {
+                tracing::error!("Failed to parse Firebase service account JSON: {e}");
+                None
+            }
+        }
+    };
+
     let state = AppState {
         db,
         config: config.clone(),
+        http,
+        fcm,
     };
 
     let router = controllers::api_router()

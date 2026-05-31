@@ -158,7 +158,19 @@ pub async fn get_alert_history(
 ) -> Result<Json<Vec<AlertLogResponse>>, AppError> {
     let logs = Alerts::find_history_by_user(&state.db, user.id, params).await?;
 
-    let response = logs.into_iter().map(Into::into).collect();
+    let response: Vec<AlertLogResponse> = logs
+        .into_iter()
+        .map(|(alert, rule)| AlertLogResponse {
+            id: alert.id,
+            rule_id: alert.rule_id,
+            triggered_at: alert.triggered_at,
+            status: alert.status.into(),
+            condition_type: rule.condition_type.into(),
+            threshold: rule.threshold,
+            reservoir_id: rule.reservoir_id,
+            value: alert.value,
+        })
+        .collect();
 
     Ok(Json(response))
 }

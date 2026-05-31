@@ -1,8 +1,7 @@
 use crate::models::entities::{
-    alert_rule::Model as DbAlertRule, //
-    alert::Model as DbAlertLog,
+    alert_rule::Model as DbAlertRule,
     sea_orm_active_enums::{
-        AlertConditionType as DbAlertConditionType, //
+        AlertConditionType as DbAlertConditionType,
         AlertStatus as DbAlertStatus,
     },
 };
@@ -111,20 +110,11 @@ pub struct AlertLogResponse {
     pub id: i32,
     pub rule_id: i32,
     pub triggered_at: DateTime<FixedOffset>,
-    pub sent_to: String,
     pub status: AlertStatus,
-}
-
-impl From<DbAlertLog> for AlertLogResponse {
-    fn from(val: DbAlertLog) -> Self {
-        Self {
-            id: val.id,
-            rule_id: val.rule_id,
-            triggered_at: val.triggered_at,
-            sent_to: val.sent_to,
-            status: val.status.into(),
-        }
-    }
+    pub condition_type: AlertConditionType,
+    pub threshold: f64,
+    pub reservoir_id: i32,
+    pub value: f64,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]

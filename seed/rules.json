@@ -1,0 +1,6 @@
+[
+  { "reservoir_index": 0, "condition_type": "less_than",    "threshold": 500  },
+  { "reservoir_index": 0, "condition_type": "greater_than", "threshold": 4800 },
+  { "reservoir_index": 1, "condition_type": "less_than",    "threshold": 200  },
+  { "reservoir_index": 2, "condition_type": "less_than",    "threshold": 150  }
+]

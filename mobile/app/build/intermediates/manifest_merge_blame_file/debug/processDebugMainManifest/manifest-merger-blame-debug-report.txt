@@ -1,0 +1,338 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.smarttank.app" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="26"
+7        android:targetSdkVersion="34" />
+8
+9    <uses-permission android:name="android.permission.INTERNET" />
+9-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:4:5-67
+9-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:4:22-64
+10    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+10-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:5:5-77
+10-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:5:22-74
+11    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+11-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:22:5-79
+11-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:22:22-76
+12    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+12-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:24:5-68
+12-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:24:22-65
+13    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+13-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:26:5-82
+13-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:26:22-79
+14
+15    <permission
+15-->[androidx.core:core:1.13.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/318db0ed08304f68d4a55fc5c16ab279/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+16        android:name="com.smarttank.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.13.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/318db0ed08304f68d4a55fc5c16ab279/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.13.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/318db0ed08304f68d4a55fc5c16ab279/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="com.smarttank.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.13.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/318db0ed08304f68d4a55fc5c16ab279/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.13.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/318db0ed08304f68d4a55fc5c16ab279/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:7:5-44:19
+22        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+22-->[androidx.core:core:1.13.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/318db0ed08304f68d4a55fc5c16ab279/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+23        android:debuggable="true"
+24        android:extractNativeLibs="false"
+25        android:icon="@mipmap/ic_launcher"
+25-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:8:9-43
+26        android:label="@string/app_name"
+26-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:10:9-41
+27        android:localeConfig="@xml/locales_config"
+27-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:13:9-51
+28        android:roundIcon="@mipmap/ic_launcher_round"
+28-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:9:9-54
+29        android:theme="@style/Theme.SmartTank"
+29-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:11:9-47
+30        android:usesCleartextTraffic="true" >
+30-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:12:9-44
+31        <activity
+31-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:15:9-23:20
+32            android:name="com.smarttank.app.MainActivity"
+32-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:16:13-41
+33            android:exported="true"
+33-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:17:13-36
+34            android:windowSoftInputMode="adjustResize" >
+34-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:18:13-55
+35            <intent-filter>
+35-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:19:13-22:29
+36                <action android:name="android.intent.action.MAIN" />
+36-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:20:17-69
+36-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:20:25-66
+37
+38                <category android:name="android.intent.category.LAUNCHER" />
+38-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:21:17-77
+38-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:21:27-74
+39            </intent-filter>
+40        </activity>
+41
+42        <!-- AppCompat locale persistence across process restarts -->
+43        <service
+43-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:26:9-33:19
+44            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+44-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:27:13-82
+45            android:enabled="false"
+45-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:28:13-36
+46            android:exported="false" >
+46-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:29:13-37
+47            <meta-data
+47-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:30:13-32:40
+48                android:name="autoStoreLocales"
+48-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:31:17-48
+49                android:value="true" />
+49-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:32:17-37
+50        </service>
+51
+52        <!-- FCM message handler -->
+53        <service
+53-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:36:9-42:19
+54            android:name="com.smarttank.app.SmartTankMessagingService"
+54-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:37:13-54
+55            android:exported="false" >
+55-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:38:13-37
+56            <intent-filter>
+56-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:39:13-41:29
+57                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+57-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:40:17-78
+57-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:40:25-75
+58            </intent-filter>
+59        </service>
+60        <service
+60-->[com.google.firebase:firebase-messaging-ktx:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/74cadb53f651e36e11713552126d6980/transformed/firebase-messaging-ktx-24.1.0/AndroidManifest.xml:23:9-29:19
+61            android:name="com.google.firebase.components.ComponentDiscoveryService"
+61-->[com.google.firebase:firebase-messaging-ktx:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/74cadb53f651e36e11713552126d6980/transformed/firebase-messaging-ktx-24.1.0/AndroidManifest.xml:24:13-84
+62            android:directBootAware="true"
+62-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:32:13-43
+63            android:exported="false" >
+63-->[com.google.firebase:firebase-messaging-ktx:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/74cadb53f651e36e11713552126d6980/transformed/firebase-messaging-ktx-24.1.0/AndroidManifest.xml:25:13-37
+64            <meta-data
+64-->[com.google.firebase:firebase-messaging-ktx:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/74cadb53f651e36e11713552126d6980/transformed/firebase-messaging-ktx-24.1.0/AndroidManifest.xml:26:13-28:85
+65                android:name="com.google.firebase.components:com.google.firebase.messaging.ktx.FirebaseMessagingLegacyRegistrar"
+65-->[com.google.firebase:firebase-messaging-ktx:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/74cadb53f651e36e11713552126d6980/transformed/firebase-messaging-ktx-24.1.0/AndroidManifest.xml:27:17-129
+66                android:value="com.google.firebase.components.ComponentRegistrar" />
+66-->[com.google.firebase:firebase-messaging-ktx:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/74cadb53f651e36e11713552126d6980/transformed/firebase-messaging-ktx-24.1.0/AndroidManifest.xml:28:17-82
+67            <meta-data
+67-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:57:13-59:85
+68                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+68-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:58:17-122
+69                android:value="com.google.firebase.components.ComponentRegistrar" />
+69-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:59:17-82
+70            <meta-data
+70-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:60:13-62:85
+71                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+71-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:61:17-119
+72                android:value="com.google.firebase.components.ComponentRegistrar" />
+72-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:62:17-82
+73            <meta-data
+73-->[com.google.firebase:firebase-installations:18.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/f6ff2a086f0289959cf038c8d4d353f3/transformed/firebase-installations-18.0.0/AndroidManifest.xml:15:13-17:85
+74                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+74-->[com.google.firebase:firebase-installations:18.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/f6ff2a086f0289959cf038c8d4d353f3/transformed/firebase-installations-18.0.0/AndroidManifest.xml:16:17-130
+75                android:value="com.google.firebase.components.ComponentRegistrar" />
+75-->[com.google.firebase:firebase-installations:18.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/f6ff2a086f0289959cf038c8d4d353f3/transformed/firebase-installations-18.0.0/AndroidManifest.xml:17:17-82
+76            <meta-data
+76-->[com.google.firebase:firebase-installations:18.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/f6ff2a086f0289959cf038c8d4d353f3/transformed/firebase-installations-18.0.0/AndroidManifest.xml:18:13-20:85
+77                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+77-->[com.google.firebase:firebase-installations:18.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/f6ff2a086f0289959cf038c8d4d353f3/transformed/firebase-installations-18.0.0/AndroidManifest.xml:19:17-127
+78                android:value="com.google.firebase.components.ComponentRegistrar" />
+78-->[com.google.firebase:firebase-installations:18.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/f6ff2a086f0289959cf038c8d4d353f3/transformed/firebase-installations-18.0.0/AndroidManifest.xml:20:17-82
+79            <meta-data
+79-->[com.google.firebase:firebase-common-ktx:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/560beab97745822dcbcffb21e6f98b0b/transformed/firebase-common-ktx-21.0.0/AndroidManifest.xml:12:13-14:85
+80                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+80-->[com.google.firebase:firebase-common-ktx:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/560beab97745822dcbcffb21e6f98b0b/transformed/firebase-common-ktx-21.0.0/AndroidManifest.xml:13:17-116
+81                android:value="com.google.firebase.components.ComponentRegistrar" />
+81-->[com.google.firebase:firebase-common-ktx:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/560beab97745822dcbcffb21e6f98b0b/transformed/firebase-common-ktx-21.0.0/AndroidManifest.xml:14:17-82
+82            <meta-data
+82-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:35:13-37:85
+83                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+83-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:36:17-109
+84                android:value="com.google.firebase.components.ComponentRegistrar" />
+84-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:37:17-82
+85            <meta-data
+85-->[com.google.firebase:firebase-datatransport:18.2.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2993c6b775b5c0489e6928ba386e7700/transformed/firebase-datatransport-18.2.0/AndroidManifest.xml:25:13-27:85
+86                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+86-->[com.google.firebase:firebase-datatransport:18.2.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2993c6b775b5c0489e6928ba386e7700/transformed/firebase-datatransport-18.2.0/AndroidManifest.xml:26:17-115
+87                android:value="com.google.firebase.components.ComponentRegistrar" />
+87-->[com.google.firebase:firebase-datatransport:18.2.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2993c6b775b5c0489e6928ba386e7700/transformed/firebase-datatransport-18.2.0/AndroidManifest.xml:27:17-82
+88        </service>
+89
+90        <receiver
+90-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:29:9-40:20
+91            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+91-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:30:13-78
+92            android:exported="true"
+92-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:31:13-36
+93            android:permission="com.google.android.c2dm.permission.SEND" >
+93-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:32:13-73
+94            <intent-filter>
+94-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:33:13-35:29
+95                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+95-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:34:17-81
+95-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:34:25-78
+96            </intent-filter>
+97
+98            <meta-data
+98-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:37:13-39:40
+99                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+99-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:38:17-92
+100                android:value="true" />
+100-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:39:17-37
+101        </receiver>
+102        <!--
+103             FirebaseMessagingService performs security checks at runtime,
+104             but set to not exported to explicitly avoid allowing another app to call it.
+105        -->
+106        <service
+106-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:46:9-53:19
+107            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+107-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:47:13-82
+108            android:directBootAware="true"
+108-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:48:13-43
+109            android:exported="false" >
+109-->[com.google.firebase:firebase-messaging:24.1.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/35812aa43387dc16d7e9cf8d68b2d1f6/transformed/firebase-messaging-24.1.0/AndroidManifest.xml:49:13-37
+110            <intent-filter android:priority="-500" >
+110-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:39:13-41:29
+111                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+111-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:40:17-78
+111-->/home/pencelheimer/documents/nure/semester-6/АПЗ/nure-caar-project/mobile/app/src/main/AndroidManifest.xml:40:25-75
+112            </intent-filter>
+113        </service>
+114
+115        <activity
+115-->[com.google.android.gms:play-services-base:18.0.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f77b76986ba2628e2963ef0ece2b99/transformed/play-services-base-18.0.1/AndroidManifest.xml:20:9-22:45
+116            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+116-->[com.google.android.gms:play-services-base:18.0.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f77b76986ba2628e2963ef0ece2b99/transformed/play-services-base-18.0.1/AndroidManifest.xml:20:19-85
+117            android:exported="false"
+117-->[com.google.android.gms:play-services-base:18.0.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f77b76986ba2628e2963ef0ece2b99/transformed/play-services-base-18.0.1/AndroidManifest.xml:22:19-43
+118            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+118-->[com.google.android.gms:play-services-base:18.0.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f77b76986ba2628e2963ef0ece2b99/transformed/play-services-base-18.0.1/AndroidManifest.xml:21:19-78
+119
+120        <provider
+120-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:23:9-28:39
+121            android:name="com.google.firebase.provider.FirebaseInitProvider"
+121-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:24:13-77
+122            android:authorities="com.smarttank.app.firebaseinitprovider"
+122-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:25:13-72
+123            android:directBootAware="true"
+123-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:26:13-43
+124            android:exported="false"
+124-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:27:13-37
+125            android:initOrder="100" />
+125-->[com.google.firebase:firebase-common:21.0.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/0e8c853c852cc8f56af0f7f06cb94b20/transformed/firebase-common-21.0.0/AndroidManifest.xml:28:13-36
+126
+127        <activity
+127-->[androidx.compose.ui:ui-tooling-android:1.7.5] /home/pencelheimer/.gradle/caches/8.11.1/transforms/63992c64599ae06610878f953af3aaa3/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+128            android:name="androidx.compose.ui.tooling.PreviewActivity"
+128-->[androidx.compose.ui:ui-tooling-android:1.7.5] /home/pencelheimer/.gradle/caches/8.11.1/transforms/63992c64599ae06610878f953af3aaa3/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+129            android:exported="true" />
+129-->[androidx.compose.ui:ui-tooling-android:1.7.5] /home/pencelheimer/.gradle/caches/8.11.1/transforms/63992c64599ae06610878f953af3aaa3/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+130
+131        <provider
+131-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+132            android:name="androidx.startup.InitializationProvider"
+132-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+133            android:authorities="com.smarttank.app.androidx-startup"
+133-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+134            android:exported="false" >
+134-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+135            <meta-data
+135-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+136                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+136-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+137                android:value="androidx.startup" />
+137-->[androidx.emoji2:emoji2:1.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/2fa0711c1b3c345f9a6818c1cbf4ba7f/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+138            <meta-data
+138-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/pencelheimer/.gradle/caches/8.11.1/transforms/186ca9fa080488c166517ba9262dddaa/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
+139                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+139-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/pencelheimer/.gradle/caches/8.11.1/transforms/186ca9fa080488c166517ba9262dddaa/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
+140                android:value="androidx.startup" />
+140-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/pencelheimer/.gradle/caches/8.11.1/transforms/186ca9fa080488c166517ba9262dddaa/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
+141            <meta-data
+141-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+142                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+142-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+143                android:value="androidx.startup" />
+143-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+144        </provider>
+145
+146        <meta-data
+146-->[com.google.android.gms:play-services-basement:18.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/67298ccef111c631396e67d4f31e48d0/transformed/play-services-basement-18.3.0/AndroidManifest.xml:21:9-23:69
+147            android:name="com.google.android.gms.version"
+147-->[com.google.android.gms:play-services-basement:18.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/67298ccef111c631396e67d4f31e48d0/transformed/play-services-basement-18.3.0/AndroidManifest.xml:22:13-58
+148            android:value="@integer/google_play_services_version" />
+148-->[com.google.android.gms:play-services-basement:18.3.0] /home/pencelheimer/.gradle/caches/8.11.1/transforms/67298ccef111c631396e67d4f31e48d0/transformed/play-services-basement-18.3.0/AndroidManifest.xml:23:13-66
+149
+150        <receiver
+150-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+151            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+151-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+152            android:directBootAware="false"
+152-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+153            android:enabled="true"
+153-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+154            android:exported="true"
+154-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+155            android:permission="android.permission.DUMP" >
+155-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+156            <intent-filter>
+156-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+157                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+157-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+157-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+158            </intent-filter>
+159            <intent-filter>
+159-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+160                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+160-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+160-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+161            </intent-filter>
+162            <intent-filter>
+162-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+163                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+163-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+163-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+164            </intent-filter>
+165            <intent-filter>
+165-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+166                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+166-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+166-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/pencelheimer/.gradle/caches/8.11.1/transforms/c3f4ea21f59403416d6b345e3d34f071/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+167            </intent-filter>
+168        </receiver>
+169
+170        <service
+170-->[com.google.android.datatransport:transport-backend-cct:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/663e5640965a2bdbba33e35a7d8170f8/transformed/transport-backend-cct-3.1.9/AndroidManifest.xml:28:9-34:19
+171            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+171-->[com.google.android.datatransport:transport-backend-cct:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/663e5640965a2bdbba33e35a7d8170f8/transformed/transport-backend-cct-3.1.9/AndroidManifest.xml:29:13-103
+172            android:exported="false" >
+172-->[com.google.android.datatransport:transport-backend-cct:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/663e5640965a2bdbba33e35a7d8170f8/transformed/transport-backend-cct-3.1.9/AndroidManifest.xml:30:13-37
+173            <meta-data
+173-->[com.google.android.datatransport:transport-backend-cct:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/663e5640965a2bdbba33e35a7d8170f8/transformed/transport-backend-cct-3.1.9/AndroidManifest.xml:31:13-33:39
+174                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+174-->[com.google.android.datatransport:transport-backend-cct:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/663e5640965a2bdbba33e35a7d8170f8/transformed/transport-backend-cct-3.1.9/AndroidManifest.xml:32:17-94
+175                android:value="cct" />
+175-->[com.google.android.datatransport:transport-backend-cct:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/663e5640965a2bdbba33e35a7d8170f8/transformed/transport-backend-cct-3.1.9/AndroidManifest.xml:33:17-36
+176        </service>
+177        <service
+177-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:26:9-30:19
+178            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+178-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:27:13-117
+179            android:exported="false"
+179-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:28:13-37
+180            android:permission="android.permission.BIND_JOB_SERVICE" >
+180-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:29:13-69
+181        </service>
+182
+183        <receiver
+183-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:32:9-34:40
+184            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+184-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:33:13-132
+185            android:exported="false" />
+185-->[com.google.android.datatransport:transport-runtime:3.1.9] /home/pencelheimer/.gradle/caches/8.11.1/transforms/774a8a619bf1c5bac234590dc42c6b46/transformed/transport-runtime-3.1.9/AndroidManifest.xml:34:13-37
+186    </application>
+187
+188</manifest>

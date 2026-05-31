@@ -1,0 +1,95 @@
+<resources>
+    <string name="app_name">SmartTank</string>
+    <string name="app_subtitle">Reservoir monitoring</string>
+
+    <!-- push notifications -->
+    <string name="notification_channel_name">Alerts</string>
+    <string name="notification_channel_description">Reservoir level alert notifications</string>
+    <string name="push_alert_body">%1$s: %2$s L — %3$s %4$d L</string>
+    <string name="alert_value_format">Value at trigger: %1$.1f L</string>
+
+    <!-- auth -->
+    <string name="login_action">Log in</string>
+    <string name="register_title">Registration</string>
+    <string name="register_action">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="no_account_register">No account? Register</string>
+    <string name="have_account_login">Already have an account? Log in</string>
+
+    <!-- dashboard -->
+    <string name="reservoirs">Reservoirs</string>
+    <string name="no_reservoirs">No reservoirs found</string>
+    <string name="capacity_format">Capacity: %1$d L</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+
+    <!-- reservoir detail -->
+    <string name="reservoir">Reservoir</string>
+    <string name="offline_last_seen">Offline · last seen: %1$s</string>
+    <string name="current_level">Current level</string>
+    <string name="liters_format">%.1f L</string>
+    <string name="percent_of_capacity">%.0f%% of capacity</string>
+    <string name="measurement_history">Measurement history</string>
+    <string name="no_sensor">No sensor connected</string>
+    <string name="no_data">No data</string>
+
+    <!-- alerts -->
+    <string name="alert_log">Alert log</string>
+    <string name="no_alerts">No alerts</string>
+    <string name="condition_below">below</string>
+    <string name="condition_above">above</string>
+    <string name="alert_level_condition">Level %1$s threshold %2$d L</string>
+
+    <!-- profile -->
+    <string name="profile">Profile</string>
+    <string name="edit">Edit</string>
+    <string name="change_password">Change password</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="logout">Log out</string>
+    <string name="logout_confirm">Log out of account?</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="change">Change</string>
+
+    <!-- device setup -->
+    <string name="device_setup">Device Setup</string>
+    <string name="setup_step_of">Step %1$d of %2$d</string>
+    <string name="setup_step_activate">Activate setup mode</string>
+    <string name="setup_activate_desc">Long-press the button on the device until the display shows "Setup mode". The device will create a Wi-Fi access point named "ESP32-Setup".</string>
+    <string name="setup_step_connect">Connect to device Wi-Fi</string>
+    <string name="setup_connect_desc">Open Wi-Fi settings and connect to the "ESP32-Setup" network (no password required). Then return to this app.</string>
+    <string name="setup_open_wifi">Open Wi-Fi Settings</string>
+    <string name="setup_i_connected">I\'m connected</string>
+    <string name="setup_step_configure">Configure device</string>
+    <string name="setup_not_reachable_title">Device not reachable</string>
+    <string name="setup_not_reachable_desc">Make sure you are connected to the "ESP32-Setup" Wi-Fi network and the device is in setup mode (long-press the button).</string>
+    <string name="setup_fetch_error">Could not read device config: %1$s</string>
+    <string name="setup_select_device">Select device</string>
+    <string name="setup_device_label">Link to device (auto-fills API key)</string>
+    <string name="tank_height_mm">Tank height (mm)</string>
+    <string name="tank_volume_l">Tank volume (L)</string>
+    <string name="sensor_offset_mm">Sensor offset (mm)</string>
+    <string name="wifi_ssid">Wi-Fi SSID</string>
+    <string name="wifi_password">Wi-Fi password</string>
+    <string name="server_url">Server URL</string>
+    <string name="api_key_label">API key</string>
+    <string name="measurement_interval_ms">Measurement interval (ms)</string>
+    <string name="save_to_device">Save to device</string>
+    <string name="setup_success_title">Configuration saved</string>
+    <string name="setup_success_desc">Long-press the button on the device to exit setup mode. It will connect to your Wi-Fi and start reporting measurements.</string>
+    <string name="retry">Retry</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+
+    <!-- appearance -->
+    <string name="theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+</resources>

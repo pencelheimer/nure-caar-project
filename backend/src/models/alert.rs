@@ -4,15 +4,18 @@ use crate::{
         AuthError,
         ResourceError,
     },
-    models::entities::{
-        alert, //
-        alert_rule,
-        prelude::*,
-        reservoir,
-        sea_orm_active_enums::{
-            AlertConditionType, //
-            AlertStatus,
+    models::{
+        entities::{
+            alert, //
+            alert_rule,
+            prelude::*,
+            reservoir,
+            sea_orm_active_enums::{
+                AlertConditionType, //
+                AlertStatus,
+            },
         },
+        push_token::PushTokens,
     },
     services::notification::NotificationService,
     views::alert::AlertHistoryQuery,
@@ -153,7 +156,7 @@ impl Alerts {
         db: &DatabaseConnection,
         user_id: i32,
         params: AlertHistoryQuery,
-    ) -> Result<Vec<alert::Model>, AppError> {
+    ) -> Result<Vec<(alert::Model, alert_rule::Model)>, AppError> {
         let alerts = Alert::find()
             .join(JoinType::InnerJoin, alert::Relation::AlertRule.def())
             .join(JoinType::InnerJoin, alert_rule::Relation::Reservoir.def())
@@ -164,14 +167,33 @@ impl Alerts {
             .all(db)
             .await?;
 
-        Ok(alerts)
+        if alerts.is_empty() {
+            return Ok(vec![]);
+        }
+
+        let rule_ids: Vec<i32> = alerts.iter().map(|a| a.rule_id).collect();
+        let rules = AlertRule::find()
+            .filter(alert_rule::Column::Id.is_in(rule_ids))
+            .all(db)
+            .await?;
+
+        let pairs = alerts
+            .into_iter()
+            .filter_map(|a| {
+                rules.iter().find(|r| r.id == a.rule_id).map(|r| (a, r.clone()))
+            })
+            .collect();
+
+        Ok(pairs)
     }
 
     pub async fn check_and_notify(
-        db: &DatabaseConnection,
+        state: &crate::state::AppState,
         reservoir_id: i32,
         value: f64,
     ) -> Result<(), AppError> {
+        let db = &state.db;
+
         let result = Reservoir::find_by_id(reservoir_id)
             .find_also_related(User)
             .one(db)
@@ -198,17 +220,20 @@ impl Alerts {
             };
 
             if triggered {
-                let message = format!(
-                    "Alert for {}: Value {:.2} is {:?} threshold {:.2}",
-                    reservoir.name, value, rule.condition_type, rule.threshold
+                let condition_str = match rule.condition_type {
+                    AlertConditionType::LessThan => "less_than",
+                    AlertConditionType::GreaterThan => "greater_than",
+                    AlertConditionType::Equals => "equals",
+                };
+
+                let email_subject = "SmartTank Alert";
+                let email_body = format!(
+                    "Alert for {}: value {:.2} L is {} threshold {:.2} L",
+                    reservoir.name, value, condition_str, rule.threshold
                 );
 
-                let send_result = NotificationService::send_email(
-                    &user_email,
-                    "SmartTank Alert Triggered",
-                    &message,
-                )
-                .await;
+                let send_result =
+                    NotificationService::send_email(&user_email, email_subject, &email_body).await;
 
                 let status = match send_result {
                     Ok(_) => AlertStatus::Sent,
@@ -218,11 +243,27 @@ impl Alerts {
                     }
                 };
 
+                // Push notification — data-only so Android formats in device locale
+                if let Some(ref fcm) = state.fcm {
+                    if let Ok(tokens) = PushTokens::find_tokens_by_user(db, user.id).await {
+                        fcm.send_alert_push(
+                            &tokens,
+                            reservoir_id,
+                            &reservoir.name,
+                            condition_str,
+                            rule.threshold,
+                            value,
+                        )
+                        .await;
+                    }
+                }
+
                 let alert_log = alert::ActiveModel {
                     rule_id: Set(rule.id),
                     sent_to: Set(user_email.clone()),
                     status: Set(status),
                     triggered_at: Set(Utc::now().into()),
+                    value: Set(value),
                     ..Default::default()
                 };
 

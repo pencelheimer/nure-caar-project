@@ -6,6 +6,11 @@ pub struct Config {
     pub db_url: String,
 
     pub jwt_secret: String,
+
+    /// JSON contents of a Firebase service account key file.
+    /// When set, FCM push notifications are enabled.
+    /// Leave empty to run without push support.
+    pub firebase_service_account_json: String,
 }
 
 impl Config {
@@ -17,11 +22,15 @@ impl Config {
 
         let jwt_secret = dotenvy::var("JWT_SECRET").expect("JWT_SECRET env var is not present");
 
+        let firebase_service_account_json =
+            dotenvy::var("FIREBASE_SERVICE_ACCOUNT_JSON").unwrap_or_default();
+
         Config {
             app_host,
             app_port,
             db_url,
             jwt_secret,
+            firebase_service_account_json,
         }
     }
 
