@@ -1,14 +1,18 @@
 set dotenv-load
 set quiet
 
-mod backend "backend/backend.just"
-mod iot     "iot/iot.just"
-mod mobile  "mobile/mobile.just"
-mod seed    "seed/seed.just"
+mod backend  "backend/backend.just"
+mod frontend "frontend/frontend.just"
+mod iot      "iot/iot.just"
+mod mobile   "mobile/mobile.just"
+mod seed     "seed/seed.just"
 
 k6_image := "grafana/k6:0.41.0"
 base_url := "http://localhost:8080"
 influx_url := "http://localhost:8086/k6"
+
+db:
+    pgcli postgres://${DB_USERNAME}:${DB_PASSWORD}@localhost:${DB_PORT:-5432}/${DB_NAME}
 
 # ─── dev ────────────────────────────────────────────────────────────────────
 
