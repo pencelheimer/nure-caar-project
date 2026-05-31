@@ -1,0 +1,22 @@
+{
+    admin off
+}
+
+:8080 {
+    reverse_proxy {
+        dynamic a {
+            name    backend
+            port    6969
+            refresh 5s
+        }
+
+        lb_policy round_robin
+        health_uri /health
+        health_interval 5s
+        health_timeout 3s
+    }
+
+    log {
+        format console
+    }
+}
